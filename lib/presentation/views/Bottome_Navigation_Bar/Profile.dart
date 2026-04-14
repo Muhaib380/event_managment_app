@@ -5,6 +5,9 @@ import 'package:event_managment_app/presentation/views/iphone-16/notifition.dart
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+
+import '../Provider/theme_provider.dart';
 
 class Profile extends StatefulWidget {
   const Profile({super.key});
@@ -14,6 +17,7 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
+  late final themeProvider = Provider.of<ThemeProvider>(context);
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -156,16 +160,26 @@ class _ProfileState extends State<Profile> {
               endIndent: 16,
             ),
             ListTile(
-              leading: Icon(Icons.dark_mode_outlined),
-              title: Text("Dark Mode",
+              leading: Icon(
+                themeProvider.isDarkMode ? Icons.dark_mode : Icons.dark_mode_outlined,
+              ),
+              title: Text(
+                "Dark Mode",
                 style: GoogleFonts.poppins(
-                    fontWeight: FontWeight.w500,
-                    fontSize: 16,
-                    color: AppColors.blackColor
+                  fontWeight: FontWeight.w500,
+                  fontSize: 16,
+                  color: Theme.of(context).textTheme.bodyLarge?.color,
                 ),
               ),
-              trailing: Icon(Icons.arrow_forward_ios,size: 16,),
-              onTap: (){},
+              trailing: Switch(
+                value: themeProvider.isDarkMode,
+                onChanged: (value) {
+                  themeProvider.toggleTheme(value);
+                },
+              ),
+              onTap: () {
+                themeProvider.toggleTheme(!themeProvider.isDarkMode);
+              },
             ),
             Divider(
               color: AppColors.lightgray,

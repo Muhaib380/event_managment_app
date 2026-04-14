@@ -18,6 +18,7 @@ class _FavoriteState extends State<Favorite> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
           body:  SingleChildScrollView(
             child: Column(children: [
               Gap(29.38),

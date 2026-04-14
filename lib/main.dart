@@ -10,14 +10,19 @@ import 'package:event_managment_app/presentation/views/Edit_details/ediit_detail
 import 'package:event_managment_app/presentation/views/Group_profile/group_profile.dart';
 import 'package:event_managment_app/presentation/views/Login/create_account.dart';
 import 'package:event_managment_app/presentation/views/Login/login.dart';
+import 'package:event_managment_app/presentation/views/Provider/theme_provider.dart';
 import 'package:event_managment_app/presentation/views/event/evets_page.dart';
 import 'package:event_managment_app/presentation/views/iphone-16/notifition.dart';
 import 'package:event_managment_app/presentation/views/splash_screen/splash_screen.dart';
 import 'package:event_managment_app/presentation/views/walkthrough_pages/walkthrough_1.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(ChangeNotifierProvider(
+      create: (context)=> ThemeProvider(),
+      child: const MyApp(),
+  ));
 }
 
 class MyApp extends StatelessWidget {
@@ -26,11 +31,42 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
     return MaterialApp(
-      title: 'Flutter Demo',debugShowCheckedModeBanner: false,
-      theme: ThemeData(
+      title: 'Dark Mode App',
+      themeMode: themeProvider.themeMode,
+      debugShowCheckedModeBanner: false,
 
-        colorScheme: .fromSeed(seedColor: Colors.deepPurple),
+      // LIGHT THEME
+      theme: ThemeData.light().copyWith(
+        scaffoldBackgroundColor: Colors.white,
+        appBarTheme: const AppBarTheme(backgroundColor: Colors.blue),
+      ),
+
+      // DARK THEME (Yahan changes ki hain)
+      darkTheme: ThemeData(
+        brightness: Brightness.dark,
+        scaffoldBackgroundColor: Colors.black, // Puri app ka background Black
+
+        // 1. Sab Text ko White karne ke liye
+        textTheme: const TextTheme(
+          bodyLarge: TextStyle(color: Colors.white),
+          bodyMedium: TextStyle(color: Colors.white),
+          titleLarge: TextStyle(color: Colors.white),
+        ),
+
+        // 2. Sab Icons ko White karne ke liye
+        iconTheme: const IconThemeData(color: Colors.white),
+
+        // 3. Card ya Container ka color set karne ke liye
+        // (Dark mode mein containers ko halka dark rakha jata hai taake white text dikhe)
+        cardColor: Colors.grey,
+
+        appBarTheme: const AppBarTheme(
+          backgroundColor: Colors.black,
+          iconTheme: IconThemeData(color: Colors.white),
+          titleTextStyle: TextStyle(color: Colors.white, fontSize: 20),
+        ),
       ),
       home: Walkthrough1(),
     );

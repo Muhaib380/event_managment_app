@@ -25,7 +25,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Material(
       child: Scaffold(
-        backgroundColor: Colors.white,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         appBar: AppBar(
           backgroundColor: Colors.white,
           elevation: 0,
@@ -512,6 +512,7 @@ class _HomePageState extends State<HomePage> {
                  rightChevronIcon: Icon(Icons.chevron_right, color: Colors.black),
               ),
                  calendarStyle: CalendarStyle(
+                 defaultTextStyle: TextStyle(color: Colors.white), // Texts ko white karein
                  selectedDecoration: BoxDecoration(
                  color: AppColors.primaryColor,
                  shape: BoxShape.circle,
