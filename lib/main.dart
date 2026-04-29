@@ -10,19 +10,32 @@ import 'package:event_managment_app/presentation/views/Edit_details/ediit_detail
 import 'package:event_managment_app/presentation/views/Group_profile/group_profile.dart';
 import 'package:event_managment_app/presentation/views/Login/create_account.dart';
 import 'package:event_managment_app/presentation/views/Login/login.dart';
+import 'package:event_managment_app/presentation/views/Provider/Provider.dart';
 import 'package:event_managment_app/presentation/views/Provider/theme_provider.dart';
+import 'package:event_managment_app/presentation/views/admin/CreateAccount.dart';
+import 'package:event_managment_app/presentation/views/admin/community.dart';
+import 'package:event_managment_app/presentation/views/admin/walkthroug.dart';
 import 'package:event_managment_app/presentation/views/event/evets_page.dart';
 import 'package:event_managment_app/presentation/views/iphone-16/notifition.dart';
 import 'package:event_managment_app/presentation/views/splash_screen/splash_screen.dart';
 import 'package:event_managment_app/presentation/views/walkthrough_pages/walkthrough_1.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-void main() {
-  runApp(ChangeNotifierProvider(
-      create: (context)=> ThemeProvider(),
-      child: const MyApp(),
-  ));
+void main()async{
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  
+  runApp(
+    MultiProvider(providers: [
+      ChangeNotifierProvider(create: (_) => ThemeProvider()),
+      ChangeNotifierProvider(create: (_) => UserProvider()),
+    ],
+        child: const MyApp(),
+
+    )
+  );
 }
 
 class MyApp extends StatelessWidget {

@@ -14,223 +14,98 @@ class Notifition extends StatefulWidget {
 class _NotifitionState extends State<Notifition> {
   @override
   Widget build(BuildContext context) {
+
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Scaffold(
+      backgroundColor: isDark ? const Color(0xFF121212) : Colors.white,
+
       appBar: AppBar(
-        leading: Icon(Icons.arrow_back),
-        title: Text("Notification"
-          ,style:GoogleFonts.poppins(
+        backgroundColor: isDark ? const Color(0xFF121212) : Colors.white,
+        iconTheme: IconThemeData(
+          color: isDark ? Colors.white : Colors.black,
+        ),
+        leading: Icon(Icons.arrow_back,
+            color: isDark ? Colors.white : Colors.black),
+
+        title: Text(
+          "Notification",
+          style: GoogleFonts.poppins(
             fontWeight: FontWeight.w600,
-            fontSize: 16,color: AppColors.blackColor
-          ) ,),
+            fontSize: 16,
+            color: isDark ? Colors.white : Colors.black,
+          ),
+        ),
       ),
+
       body: SingleChildScrollView(
-        child: Column(children: [
-          Gap(32),
-          Padding(
-               padding: const EdgeInsets.all(8.0),
-               child: Container(
-                color: AppColors.listtile,
-                height: 70,
-                width: 392,
-                child: ListTile(
-                  leading: Image.asset(AssetsConstants.notification,height: 54,width: 60,),
-                  title: Text("Lorem ipsum dolor sit amet consectetur.,"
-                    ,style: GoogleFonts.poppins(
-                      fontWeight: FontWeight.w400
-                      ,fontSize: 14,color: AppColors.blackColor
-                    ),),
-                  trailing: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                    Icon(Icons.circle,color: AppColors.primaryColor,),
-                    Gap(6),
-                    Text("4:00pm"
-                      ,style: GoogleFonts.poppins(
-                        fontWeight: FontWeight.w400
-                        ,fontSize: 14,color: AppColors.blackColor
-                    ),)
-                  ],),
+        child: Column(
+          children: [
+            const Gap(32),
+
+            _tile(isDark),
+            const Gap(16),
+            _tile(isDark),
+            const Gap(16),
+            _tile(isDark),
+            const Gap(16),
+            _tile(isDark),
+            const Gap(16),
+            _tile(isDark),
+            const Gap(16),
+            _tile(isDark),
+            const Gap(16),
+            _tile(isDark),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _tile(bool isDark) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Container(
+        height: 70,
+        width: 392,
+        color: isDark ? const Color(0xFF1E1E1E) : AppColors.listtile,
+        child: ListTile(
+          leading: Image.asset(
+            AssetsConstants.notification,
+            height: 54,
+            width: 60,
+          ),
+
+          title: Text(
+            "Lorem ipsum dolor sit amet consectetur.,",
+            style: GoogleFonts.poppins(
+              fontWeight: FontWeight.w400,
+              fontSize: 14,
+              color: isDark ? Colors.white : AppColors.blackColor,
+            ),
+          ),
+
+          trailing: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.circle,
+                color: AppColors.primaryColor,
+              ),
+              const Gap(6),
+              Text(
+                "4:00pm",
+                style: GoogleFonts.poppins(
+                  fontWeight: FontWeight.w400,
+                  fontSize: 14,
+                  color: isDark
+                      ? Colors.white70
+                      : AppColors.profilesetting,
                 ),
-                   ),
-             ),
-          Gap(16),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Container(
-              color: AppColors.listtile,
-              height: 70,
-              width: 392,
-              child: ListTile(
-                leading: Image.asset(AssetsConstants.notification,height: 54,width: 60,),
-                title: Text("Lorem ipsum dolor sit amet consectetur.,"
-                  ,style: GoogleFonts.poppins(
-                      fontWeight: FontWeight.w400
-                      ,fontSize: 14,color: AppColors.blackColor
-                  ),),
-                trailing: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(Icons.circle,color: AppColors.primaryColor,),
-                    Gap(6),
-                    Text("4:00pm"
-                      ,style: GoogleFonts.poppins(
-                          fontWeight: FontWeight.w400
-                          ,fontSize: 14,color: AppColors.blackColor
-                      ),)
-                  ],),
-              ),
-            ),
+              )
+            ],
           ),
-          Gap(16),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Container(
-              color: AppColors.listtile,
-              height: 70,
-              width: 392,
-              child: ListTile(
-                leading: Image.asset(AssetsConstants.notification,height: 54,width: 60,),
-                title: Text("Lorem ipsum dolor sit amet consectetur.,"
-                  ,style: GoogleFonts.poppins(
-                      fontWeight: FontWeight.w400
-                      ,fontSize: 14,color: AppColors.blackColor
-                  ),),
-                trailing: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(Icons.circle,color: AppColors.primaryColor,),
-                    Gap(6),
-                    Text("4:00pm"
-                      ,style: GoogleFonts.poppins(
-                          fontWeight: FontWeight.w400
-                          ,fontSize: 14,color: AppColors.blackColor
-                      ),)
-                  ],),
-              ),
-            ),
-          ),
-          Gap(16),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Container(
-              color: AppColors.listtile,
-              height: 70,
-              width: 392,
-              child: ListTile(
-                leading: Image.asset(AssetsConstants.notification,height: 54,width: 60,),
-                title: Text("Lorem ipsum dolor sit amet consectetur.,"
-                  ,style: GoogleFonts.poppins(
-                      fontWeight: FontWeight.w400
-                      ,fontSize: 14,color: AppColors.blackColor
-                  ),),
-                trailing: Text("4:00pm"
-                  ,style: GoogleFonts.poppins(
-                      fontWeight: FontWeight.w400
-                      ,fontSize: 14,color: AppColors.profilesetting
-                  ),),
-              ),
-            ),
-          ),
-          Gap(16),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Container(
-              color: AppColors.listtile,
-              height: 70,
-              width: 392,
-              child: ListTile(
-                leading: Image.asset(AssetsConstants.notification,height: 54,width: 60,),
-                title: Text("Lorem ipsum dolor sit amet consectetur.,"
-                  ,style: GoogleFonts.poppins(
-                      fontWeight: FontWeight.w400
-                      ,fontSize: 14,color: AppColors.blackColor
-                  ),),
-                trailing:
-                    Text("4:00pm"
-                      ,style: GoogleFonts.poppins(
-                          fontWeight: FontWeight.w400
-                          ,fontSize: 14,color: AppColors.profilesetting
-                      ),)
-
-              ),
-            ),
-          ),
-          Gap(16),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Container(
-              color: AppColors.listtile,
-              height: 70,
-              width: 392,
-              child: ListTile(
-                leading: Image.asset(AssetsConstants.notification,height: 54,width: 60,),
-                title: Text("Lorem ipsum dolor sit amet consectetur.,"
-                  ,style: GoogleFonts.poppins(
-                      fontWeight: FontWeight.w400
-                      ,fontSize: 14,color: AppColors.blackColor
-                  ),),
-                trailing:
-                      Text("4:00pm"
-                      ,style: GoogleFonts.poppins(
-                          fontWeight: FontWeight.w400
-                          ,fontSize: 14,color: AppColors.profilesetting
-                      ),)
-
-              ),
-            ),
-          ),
-          Gap(16),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Container(
-              color: AppColors.listtile,
-              height: 70,
-              width: 392,
-              child: ListTile(
-                leading: Image.asset(AssetsConstants.notification,height: 54,width: 60,),
-                title: Text("Lorem ipsum dolor sit amet consectetur.,"
-                  ,style: GoogleFonts.poppins(
-                      fontWeight: FontWeight.w400
-                      ,fontSize: 14,color: AppColors.blackColor
-                  ),),
-                trailing:
-                    Text("4:00pm"
-                      ,style: GoogleFonts.poppins(
-                          fontWeight: FontWeight.w400
-                          ,fontSize: 14,color: AppColors.profilesetting
-                      ),)
-
-              ),
-            ),
-          ),
-          Gap(16),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Container(
-              color: AppColors.listtile,
-              height: 70,
-              width: 392,
-              child: ListTile(
-                leading: Image.asset(AssetsConstants.notification,height: 54,width: 60,),
-                title: Text("Lorem ipsum dolor sit amet consectetur.,"
-                  ,style: GoogleFonts.poppins(
-                      fontWeight: FontWeight.w400
-                      ,fontSize: 14,color: AppColors.blackColor
-                  ),),
-                trailing:
-                    Text("4:00pm"
-                      ,style: GoogleFonts.poppins(
-                          fontWeight: FontWeight.w400
-                          ,fontSize: 14,color: AppColors.profilesetting
-                      ),)
-
-              ),
-            ),
-          ),
-          
-        
-        
-        ],),
+        ),
       ),
     );
   }

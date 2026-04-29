@@ -1,5 +1,4 @@
 import 'package:event_managment_app/presentation/constants/assets_constants.dart';
-import 'package:event_managment_app/presentation/views/Bottome_Navigation_Bar/Bottome_Navigation/Navigation_Bar.dart';
 import 'package:event_managment_app/presentation/views/Login/login.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
@@ -21,10 +20,12 @@ class _Walkthrough1State extends State<Walkthrough1> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Scaffold(
+      backgroundColor: isDark ? const Color(0xFF121212) : Colors.white,
       body: Stack(
         children: [
-
 
           PageView(
             controller: Controller,
@@ -44,34 +45,43 @@ class _Walkthrough1State extends State<Walkthrough1> {
                 ),
                 child: Column(
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.only(top: 38),
-                      child: Image.asset(AssetsConstants.location),
+                    const Padding(
+                      padding: EdgeInsets.only(top: 38),
+                      child: Image(
+                        image: AssetImage(AssetsConstants.location),
+                      ),
                     ),
-                    SizedBox(height: 15),
+                    const SizedBox(height: 15),
+
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 47),
-                      child: Text("Discover What's Happening Nearby",
+                      child: Text(
+                        "Discover What's Happening Nearby",
                         style: GoogleFonts.poppins(
                           fontWeight: FontWeight.w700,
                           fontSize: 32,
-                          color: Color(0xFF000000),
+                          color: isDark ? Colors.white : Colors.black,
                         ),
                       ),
                     ),
-                    SizedBox(height: 10),
-                    Text("Find real events from verified community groups ",
+
+                    const SizedBox(height: 10),
+
+                    Text(
+                      "Find real events from verified community groups ",
                       style: GoogleFonts.poppins(
                         fontWeight: FontWeight.w400,
                         fontSize: 14,
-                        color: Color(0xFF727272),
+                        color: isDark ? Colors.white70 : Colors.black54,
                       ),
                     ),
-                    Text(" and clubs — all in one place.",
+
+                    Text(
+                      " and clubs — all in one place.",
                       style: GoogleFonts.poppins(
                         fontWeight: FontWeight.w400,
                         fontSize: 14,
-                        color: AppColors.grayColor,
+                        color: isDark ? Colors.white70 : AppColors.grayColor,
                       ),
                     ),
                   ],
@@ -87,43 +97,51 @@ class _Walkthrough1State extends State<Walkthrough1> {
                     image: AssetImage("assets/images/walkingthrough_bck.png"),
                   ),
                 ),
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      Gap(108),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 26),
-                        child: Image.asset(AssetsConstants.Calendar, width: 389, height: 270.23),
+                child: Column(
+                  children: [
+                    const Gap(108),
+                    const Padding(
+                      padding: EdgeInsets.only(top: 26),
+                      child: Image(
+                        image: AssetImage(AssetsConstants.Calendar),
+                        width: 389,
+                        height: 270.23,
                       ),
-                      Gap(70),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 84),
-                        child: Text("Events Sync Automatically",
-                          style: GoogleFonts.poppins(
-                            fontWeight: FontWeight.w700,
-                            fontSize: 32,
-                            color: AppColors.blackColor,
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: 10),
-                      Text("No manual setup — we integrate directly with",
+                    ),
+                    const Gap(70),
+
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 84),
+                      child: Text(
+                        "Events Sync Automatically",
                         style: GoogleFonts.poppins(
-                          fontWeight: FontWeight.w400,
-                          fontSize: 14,
-                          color: AppColors.grayColor,
+                          fontWeight: FontWeight.w700,
+                          fontSize: 32,
+                          color: isDark ? Colors.white : AppColors.blackColor,
                         ),
                       ),
-                      Text(" group calendars for real-time updates.",
-                        style: GoogleFonts.poppins(
-                          fontWeight: FontWeight.w400,
-                          fontSize: 14,
-                          color: AppColors.grayColor,
-                        ),
+                    ),
+
+                    const SizedBox(height: 10),
+
+                    Text(
+                      "No manual setup — we integrate directly with",
+                      style: GoogleFonts.poppins(
+                        fontWeight: FontWeight.w400,
+                        fontSize: 14,
+                        color: isDark ? Colors.white70 : AppColors.grayColor,
                       ),
-                      Gap(200),
-                    ],
-                  ),
+                    ),
+
+                    Text(
+                      " group calendars for real-time updates.",
+                      style: GoogleFonts.poppins(
+                        fontWeight: FontWeight.w400,
+                        fontSize: 14,
+                        color: isDark ? Colors.white70 : AppColors.grayColor,
+                      ),
+                    ),
+                  ],
                 ),
               ),
 
@@ -138,63 +156,75 @@ class _Walkthrough1State extends State<Walkthrough1> {
                 ),
                 child: Column(
                   children: [
-                    Gap(67),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 38),
-                      child: Image.asset(AssetsConstants.Online_reminder),
+                    const Gap(67),
+                    const Padding(
+                      padding: EdgeInsets.only(top: 38),
+                      child: Image(
+                        image: AssetImage(AssetsConstants.Online_reminder),
+                      ),
                     ),
-                    SizedBox(height: 15),
+                    const SizedBox(height: 15),
+
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 62),
-                      child: Text("Shape the Next",
+                      child: Text(
+                        "Shape the Next",
                         style: GoogleFonts.poppins(
                           fontWeight: FontWeight.w800,
                           fontSize: 32,
-                          color: AppColors.blackColor,
+                          color: isDark ? Colors.white : AppColors.blackColor,
                         ),
                       ),
                     ),
-                    Text(" Big Event",
+
+                    Text(
+                      " Big Event",
                       style: GoogleFonts.poppins(
                         fontWeight: FontWeight.w800,
                         fontSize: 32,
-                        color: AppColors.blackColor,
+                        color: isDark ? Colors.white : AppColors.blackColor,
                       ),
                     ),
-                    SizedBox(height: 10),
-                    Text("Vote on new event ideas, favorite your picks, and ",
+
+                    const SizedBox(height: 10),
+
+                    Text(
+                      "Vote on new event ideas, favorite your picks, and ",
                       style: GoogleFonts.poppins(
                         fontWeight: FontWeight.w400,
                         fontSize: 14,
-                        color: AppColors.grayColor,
+                        color: isDark ? Colors.white70 : AppColors.grayColor,
                       ),
                     ),
-                    Text(" never miss what matters most.",
+
+                    Text(
+                      " never miss what matters most.",
                       style: GoogleFonts.poppins(
                         fontWeight: FontWeight.w400,
                         fontSize: 14,
-                        color: AppColors.grayColor,
+                        color: isDark ? Colors.white70 : AppColors.grayColor,
                       ),
                     ),
                   ],
                 ),
               ),
-
             ],
           ),
 
-
+          // Skip Button
           if (_currentPage != 0)
             Positioned(
               top: 50,
               right: 20,
               child: GestureDetector(
                 onTap: () {
-                  Navigator.pushReplacement(context,
+                  Navigator.pushReplacement(
+                    context,
                     MaterialPageRoute(builder: (context) => Login()),
                   );
                 },
-                child: Text("Skip",
+                child: Text(
+                  "Skip",
                   style: GoogleFonts.poppins(
                     fontWeight: FontWeight.w600,
                     fontSize: 18,
@@ -204,7 +234,7 @@ class _Walkthrough1State extends State<Walkthrough1> {
               ),
             ),
 
-          // ✅ Smooth Page Indicator
+          // Indicator
           Positioned(
             bottom: 90,
             left: 0,
@@ -219,18 +249,11 @@ class _Walkthrough1State extends State<Walkthrough1> {
                   dotHeight: 10,
                   dotWidth: 10,
                 ),
-                onDotClicked: (index) {
-                  Controller.animateToPage(
-                    index,
-                    duration: Duration(milliseconds: 300),
-                    curve: Curves.easeInOut,
-                  );
-                },
               ),
             ),
           ),
 
-          //  Next / Get Started Button
+          // Button
           Positioned(
             bottom: 20,
             left: 16,
@@ -240,13 +263,14 @@ class _Walkthrough1State extends State<Walkthrough1> {
               child: ElevatedButton(
                 onPressed: () {
                   if (_currentPage == 2) {
-                    Navigator.push(context,
+                    Navigator.push(
+                      context,
                       MaterialPageRoute(builder: (context) => Login()),
                     );
                   } else {
                     Controller.animateToPage(
                       _currentPage + 1,
-                      duration: Duration(milliseconds: 300),
+                      duration: const Duration(milliseconds: 300),
                       curve: Curves.easeInOut,
                     );
                   }
