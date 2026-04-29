@@ -2,8 +2,6 @@
 //
 //     final eventModel = eventModelFromJson(jsonString);
 
-import 'dart:convert';
-
 class EventModel {
   final String? docId;
   final String? title;

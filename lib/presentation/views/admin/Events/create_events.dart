@@ -33,11 +33,11 @@ class _CreateEventAdminState extends State<CreateEventAdmin> {
 
   /// Combine date and time into single DateTime
   DateTime get finalDateTime => DateTime(
-    selectedDate!.year,
-    selectedDate!.month,
-    selectedDate!.day,
-    selectedTime!.hour,
-    selectedTime!.minute,
+    selectedDate.year,
+    selectedDate.month,
+    selectedDate.day,
+    selectedTime.hour,
+    selectedTime.minute,
   );
 
   @override
@@ -385,7 +385,7 @@ class _CreateEventAdminState extends State<CreateEventAdmin> {
                           );
                           return;
                         }
-                        if (selectedDate == null || selectedTime == null) {
+                        if (selectedTime == null) {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
                               content: Text("Please select date and time"),

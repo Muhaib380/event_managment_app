@@ -1,5 +1,4 @@
 import 'package:event_managment_app/presentation/constants/assets_constants.dart';
-import 'package:event_managment_app/presentation/views/Login/create_account.dart';
 import 'package:event_managment_app/presentation/views/admin/CreateAccount.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
@@ -57,7 +56,7 @@ class _LoginAdminState extends State<LoginAdmin> {
                         fontWeight: FontWeight.w600,
                         color: isDark ? Colors.white : AppColors.blackColor,
                       ),
-                    )
+                    ),
                   ],
                 ),
               ),
@@ -102,16 +101,15 @@ class _LoginAdminState extends State<LoginAdmin> {
                 padding: const EdgeInsets.all(8.0),
                 child: TextField(
                   controller: emailController,
-                  style: TextStyle(
-                    color: isDark ? Colors.white : Colors.black,
-                  ),
+                  style: TextStyle(color: isDark ? Colors.white : Colors.black),
                   decoration: InputDecoration(
                     hintText: "Email",
                     hintStyle: TextStyle(
                       color: isDark ? Colors.white54 : Colors.grey,
                     ),
-                    fillColor:
-                    isDark ? const Color(0xFF1E1E1E) : AppColors.whiteColor,
+                    fillColor: isDark
+                        ? const Color(0xFF1E1E1E)
+                        : AppColors.whiteColor,
                     filled: true,
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
@@ -139,15 +137,11 @@ class _LoginAdminState extends State<LoginAdmin> {
                 child: TextField(
                   controller: passwordController,
                   obscureText: _isObscure,
-                  style: TextStyle(
-                    color: isDark ? Colors.white : Colors.black,
-                  ),
+                  style: TextStyle(color: isDark ? Colors.white : Colors.black),
                   decoration: InputDecoration(
                     suffixIcon: IconButton(
                       icon: Icon(
-                        _isObscure
-                            ? Icons.visibility_off
-                            : Icons.visibility,
+                        _isObscure ? Icons.visibility_off : Icons.visibility,
                         color: isDark ? Colors.white70 : Colors.black,
                       ),
                       onPressed: () {
@@ -160,8 +154,9 @@ class _LoginAdminState extends State<LoginAdmin> {
                     hintStyle: TextStyle(
                       color: isDark ? Colors.white54 : Colors.grey,
                     ),
-                    fillColor:
-                    isDark ? const Color(0xFF1E1E1E) : AppColors.whiteColor,
+                    fillColor: isDark
+                        ? const Color(0xFF1E1E1E)
+                        : AppColors.whiteColor,
                     filled: true,
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
@@ -228,8 +223,9 @@ class _LoginAdminState extends State<LoginAdmin> {
                 child: ElevatedButton(
                   onPressed: () {},
                   style: ElevatedButton.styleFrom(
-                    backgroundColor:
-                    isDark ? const Color(0xFF1E1E1E) : AppColors.whiteColor,
+                    backgroundColor: isDark
+                        ? const Color(0xFF1E1E1E)
+                        : AppColors.whiteColor,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
@@ -288,7 +284,7 @@ class _LoginAdminState extends State<LoginAdmin> {
                         color: AppColors.primaryColor,
                       ),
                     ),
-                  )
+                  ),
                 ],
               ),
 
