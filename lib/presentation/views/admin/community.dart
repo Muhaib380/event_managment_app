@@ -21,73 +21,93 @@ class _CommunityAdminState extends State<CommunityAdmin> {
 
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      appBar: AppBar(
-        backgroundColor: AppColors.primaryColor,
-        elevation: 0,
-      ),
+      appBar: AppBar(backgroundColor: AppColors.primaryColor, elevation: 0),
       floatingActionButton: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           FloatingActionButton(
-              onPressed: (){
-                Navigator.push(context, MaterialPageRoute(builder: (context) => UplaodEventAdmin()));
-              },
-          heroTag: "vote",
-          backgroundColor: AppColors.primaryColor,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(Icons.how_to_vote, color:AppColors.whiteColor, size: 20),
-              Text("Vote"
-                ,style: GoogleFonts.poppins(
-                 fontWeight: FontWeight.w500,
-                 fontSize: 14,color: AppColors.whiteColor
-                  )),
-            ],),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => UplaodEventAdmin()),
+              );
+            },
+            heroTag: "vote",
+            backgroundColor: AppColors.primaryColor,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.how_to_vote, color: AppColors.whiteColor, size: 20),
+                Text(
+                  "Vote",
+                  style: GoogleFonts.poppins(
+                    fontWeight: FontWeight.w500,
+                    fontSize: 14,
+                    color: AppColors.whiteColor,
+                  ),
+                ),
+              ],
+            ),
           ),
           Gap(16),
-          FloatingActionButton(onPressed: (){
-            Navigator.push(context, MaterialPageRoute(builder: (context) => CreateEventAdmin()));
-          },
-          heroTag: "event",
-          backgroundColor: AppColors.primaryColor,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(Icons.add, color:AppColors.whiteColor, size: 20),
-              Text("Evets"
-                ,style: GoogleFonts.poppins(
-                fontWeight: FontWeight.w500,
-                fontSize: 14,color: AppColors.whiteColor
-              ),),
-            ],
-          ),)
-      ],),
+          FloatingActionButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => CreateEventAdmin()),
+              );
+            },
+            heroTag: "event",
+            backgroundColor: AppColors.primaryColor,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.add, color: AppColors.whiteColor, size: 20),
+                Text(
+                  "Evets",
+                  style: GoogleFonts.poppins(
+                    fontWeight: FontWeight.w500,
+                    fontSize: 14,
+                    color: AppColors.whiteColor,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
       body: SafeArea(
         child: SingleChildScrollView(
-        child: Column(
-        children: [
-        Container(
-        color: AppColors.primaryColor,
-        child: ListTile(
-        leading: Image.asset(AssetsConstants.Ellipse, width: 54, height: 54),
-        title: Text(
-        "Business group",
-        style: GoogleFonts.poppins(
-        fontWeight: FontWeight.w600,
-          fontSize: 18,
-          color: Colors.white,
-        ),
-        ),
-          trailing: const Icon(Icons.more_vert_outlined, color: Colors.white),
-        ),
-        ),
-          const Gap(30),
-          _buildEventCard(context),
-          const Gap(16),
-          _buildEventCard(context),
-        ],
-        ),
+          child: Column(
+            children: [
+              Container(
+                color: AppColors.primaryColor,
+                child: ListTile(
+                  leading: Image.asset(
+                    AssetsConstants.Ellipse,
+                    width: 54,
+                    height: 54,
+                  ),
+                  title: Text(
+                    "Business group",
+                    style: GoogleFonts.poppins(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 18,
+                      color: Colors.white,
+                    ),
+                  ),
+                  trailing: const Icon(
+                    Icons.more_vert_outlined,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+              const Gap(30),
+              _buildEventCard(context),
+              const Gap(16),
+              _buildEventCard(context),
+            ],
+          ),
         ),
       ),
     );
@@ -100,10 +120,10 @@ class _CommunityAdminState extends State<CommunityAdmin> {
       width: 394,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12),
-        color: isDark ? Colors.black : Colors.white
-        ,border: Border.all(
-        color: isDark ? Colors.white : AppColors.borderColor,
-      ),
+        color: isDark ? Colors.black : Colors.white,
+        border: Border.all(
+          color: isDark ? Colors.white : AppColors.borderColor,
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -117,7 +137,10 @@ class _CommunityAdminState extends State<CommunityAdmin> {
                 fit: BoxFit.cover,
               ),
               onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => const GroupProfile()));
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const GroupProfile()),
+                );
               },
             ),
           ),
@@ -127,19 +150,31 @@ class _CommunityAdminState extends State<CommunityAdmin> {
             child: Text(
               "Made in Melanin! Black History Month Social",
               style: GoogleFonts.poppins(
-                  fontWeight: FontWeight.w600,
-                  fontSize: 16,
-                  color: isDark ? Colors.white : Colors.black
+                fontWeight: FontWeight.w600,
+                fontSize: 16,
+                color: isDark ? Colors.white : Colors.black,
               ),
             ),
           ),
           const Gap(12),
 
-          _buildOption(context, "A.", "Made in Melanin! Black History Month Social", "12k Votes", true),
+          _buildOption(
+            context,
+            "A.",
+            "Made in Melanin! Black History Month Social",
+            "12k Votes",
+            true,
+          ),
 
           const Gap(10),
 
-          _buildOption(context, "B.", "Made in Melanin! Black History Month Social", "12k Votes", false),
+          _buildOption(
+            context,
+            "B.",
+            "Made in Melanin! Black History Month Social",
+            "12k Votes",
+            false,
+          ),
 
           Padding(
             padding: const EdgeInsets.all(12.0),
@@ -156,13 +191,19 @@ class _CommunityAdminState extends State<CommunityAdmin> {
                 ),
               ],
             ),
-          )
+          ),
         ],
       ),
     );
   }
 
-  Widget _buildOption(BuildContext context, String label, String text, String votes, bool isChecked) {
+  Widget _buildOption(
+    BuildContext context,
+    String label,
+    String text,
+    String votes,
+    bool isChecked,
+  ) {
     bool isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Padding(
@@ -180,7 +221,9 @@ class _CommunityAdminState extends State<CommunityAdmin> {
           ),
           const Gap(8),
           Icon(
-            isChecked ? Icons.radio_button_checked_outlined : Icons.radio_button_off,
+            isChecked
+                ? Icons.radio_button_checked_outlined
+                : Icons.radio_button_off,
             color: isChecked
                 ? AppColors.primaryColor
                 : Theme.of(context).iconTheme.color,
@@ -194,9 +237,9 @@ class _CommunityAdminState extends State<CommunityAdmin> {
                 Text(
                   text,
                   style: GoogleFonts.poppins(
-                      fontWeight: FontWeight.w400,
-                      fontSize: 13,
-                      color: isDark ? Colors.white : Colors.black
+                    fontWeight: FontWeight.w400,
+                    fontSize: 13,
+                    color: isDark ? Colors.white : Colors.black,
                   ),
                 ),
                 Text(

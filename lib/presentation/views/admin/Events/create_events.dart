@@ -1,7 +1,14 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:event_managment_app/configurations/app_colors.dart';
+import 'package:event_managment_app/infrastructure/models/event.dart';
+import 'package:event_managment_app/infrastructure/services/cloudnary.dart';
+import 'package:event_managment_app/infrastructure/services/event.dart';
+import 'package:event_managment_app/infrastructure/services/image_piker.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 
 class CreateEventAdmin extends StatefulWidget {
@@ -12,8 +19,26 @@ class CreateEventAdmin extends StatefulWidget {
 }
 
 class _CreateEventAdminState extends State<CreateEventAdmin> {
+  TextEditingController titleController = TextEditingController();
+  TextEditingController locationController = TextEditingController();
+  TextEditingController eventDetailsController = TextEditingController();
+  String? imageUrl;
+  final CloudinaryService _cloudinaryService = CloudinaryService();
+  final ImagePickerService _picker = ImagePickerService();
+  bool isLoading = false;
+  bool isUploading = false;
+
   DateTime selectedDate = DateTime.now();
   TimeOfDay selectedTime = TimeOfDay.now();
+
+  /// Combine date and time into single DateTime
+  DateTime get finalDateTime => DateTime(
+    selectedDate!.year,
+    selectedDate!.month,
+    selectedDate!.day,
+    selectedTime!.hour,
+    selectedTime!.minute,
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -57,6 +82,7 @@ class _CreateEventAdminState extends State<CreateEventAdmin> {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: TextField(
+                controller: titleController,
                 style: TextStyle(color: textColor),
                 decoration: InputDecoration(
                   hintText: "Made in Melanin! Black History Month Social,",
@@ -225,6 +251,7 @@ class _CreateEventAdminState extends State<CreateEventAdmin> {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: TextField(
+                controller: locationController,
                 style: TextStyle(color: textColor),
                 decoration: InputDecoration(
                   hintText: "1901 Thornridge Cir. Shiloh, Hawaii 81063",
@@ -257,29 +284,12 @@ class _CreateEventAdminState extends State<CreateEventAdmin> {
               ),
             ),
             Gap(6),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Container(
-                width: 390,
-                height: 172,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  border: Border.all(color: borderColor, width: 1.5),
-                  color: bgColor,
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Text(
-                    "Lorem ipsum dolor sit amet consectetur. Lectus viverra fermentum natoque nibh enim aliquam tincidunt eu purus. Non habitasse sed feugiat aliquet tortor. Risus turpis quam est quam leo turpis ipsum. Amet non sed lacus placerat turpis in. Vitae amet sit sed dictum eget scelerisque massa nibh.",
-                    style: GoogleFonts.poppins(
-                      fontWeight: FontWeight.w400,
-                      fontSize: 14,
-                      color: hintColor,
-                    ),
-                  ),
-                ),
-              ),
+            TextFormField(
+              controller: eventDetailsController,
+              decoration: InputDecoration(hintText: "Event Detail"),
+              maxLines: 4,
             ),
+
             Gap(24),
             Padding(
               padding: const EdgeInsets.only(right: 275),
@@ -295,33 +305,65 @@ class _CreateEventAdminState extends State<CreateEventAdmin> {
             Gap(6),
             Padding(
               padding: const EdgeInsets.only(right: 229),
-              child: Container(
-                height: 127,
-                width: 154,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  border: Border.all(color: borderColor, width: 1.5),
-                  color: bgColor,
-                ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    IconButton(
-                      onPressed: () {},
-                      icon: Icon(
-                        Icons.file_upload_outlined,
-                        color: textColor,
-                      ),
-                    ),
-                    Text(
-                      "Upload",
-                      style: GoogleFonts.poppins(
-                        fontWeight: FontWeight.w400,
-                        fontSize: 14,
-                        color: hintColor,
-                      ),
-                    ),
-                  ],
+              child: InkWell(
+                onTap: () async {
+                  setState(() => isUploading = true);
+                  try {
+                    final url = await _picker.pickAndUploadImage();
+                    if (url != null) {
+                      setState(() {
+                        imageUrl = url;
+                        isUploading = false;
+                      });
+                    } else {
+                      setState(() => isUploading = false);
+                    }
+                  } catch (e) {
+                    setState(() => isUploading = false);
+                    if (mounted) {
+                      ScaffoldMessenger.of(
+                        context,
+                      ).showSnackBar(SnackBar(content: Text(e.toString())));
+                    }
+                  }
+                },
+                child: Container(
+                  height: 127,
+                  width: 154,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(color: borderColor, width: 1.5),
+                    color: bgColor,
+                  ),
+                  child: AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 300),
+                    child: imageUrl != null && imageUrl!.isNotEmpty
+                        ? const Icon(Icons.check, size: 40, color: Colors.green)
+                        : isUploading
+                        ? const CircularProgressIndicator(
+                            color: Color(0xff505050),
+                            strokeWidth: 0.8,
+                          )
+                        : Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.file_upload_outlined,
+                                color: textColor,
+                                size: 40,
+                              ),
+                              const SizedBox(height: 8),
+                              Text(
+                                "Upload",
+                                style: GoogleFonts.poppins(
+                                  fontWeight: FontWeight.w400,
+                                  fontSize: 14,
+                                  color: hintColor,
+                                ),
+                              ),
+                            ],
+                          ),
+                  ),
                 ),
               ),
             ),
@@ -329,23 +371,78 @@ class _CreateEventAdminState extends State<CreateEventAdmin> {
             SizedBox(
               height: 56,
               width: 400,
-              child: ElevatedButton(
-                onPressed: () {},
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.primaryColor,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(11),
-                  ),
-                ),
-                child: Text(
-                  "Create Event",
-                  style: GoogleFonts.poppins(
-                    fontWeight: FontWeight.w600,
-                    fontSize: 18,
-                    color: AppColors.whiteColor,
-                  ),
-                ),
-              ),
+              child: isLoading
+                  ? Center(child: CircularProgressIndicator())
+                  : ElevatedButton(
+                      onPressed: () async {
+                        if (titleController.text.isEmpty ||
+                            locationController.text.isEmpty ||
+                            eventDetailsController.text.isEmpty) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text("Please fill all the fields"),
+                            ),
+                          );
+                          return;
+                        }
+                        if (selectedDate == null || selectedTime == null) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text("Please select date and time"),
+                            ),
+                          );
+                        }
+                        if (imageUrl == null) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text("Please upload an image")),
+                          );
+                        }
+                        try {
+                          isLoading = true;
+                          setState(() {});
+                          EventServices()
+                              .createEvent(
+                                EventModel(
+                                  title: titleController.text,
+                                  dateTime: finalDateTime,
+                                  location: locationController.text,
+                                  eventdetails: eventDetailsController.text,
+                                  image: imageUrl,
+                                  createAt:
+                                      DateTime.now().millisecondsSinceEpoch,
+                                ),
+                              )
+                              .then((val) {
+                                isLoading = false;
+                                setState(() {});
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text("Event created successfully"),
+                                  ),
+                                );
+                                Navigator.pop(context);
+                              });
+                        } catch (e) {
+                          ScaffoldMessenger.of(
+                            context,
+                          ).showSnackBar(SnackBar(content: Text(e.toString())));
+                        }
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.primaryColor,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(11),
+                        ),
+                      ),
+                      child: Text(
+                        "Create Event",
+                        style: GoogleFonts.poppins(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 18,
+                          color: AppColors.whiteColor,
+                        ),
+                      ),
+                    ),
             ),
             Gap(38),
           ],
