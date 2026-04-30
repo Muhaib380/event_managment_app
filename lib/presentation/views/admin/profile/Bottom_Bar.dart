@@ -1,4 +1,5 @@
 import 'package:event_managment_app/configurations/app_colors.dart';
+import 'package:event_managment_app/infrastructure/models/event.dart';
 import 'package:event_managment_app/presentation/views/admin/Home.dart';
 import 'package:event_managment_app/presentation/views/admin/community.dart';
 import 'package:event_managment_app/presentation/views/admin/favorite.dart';
@@ -13,12 +14,13 @@ class Bottom_BarAdmin extends StatefulWidget {
   State<Bottom_BarAdmin> createState() => _Bottom_BarAdminState();
 }
 
+// i am trying to pulish repo
 class _Bottom_BarAdminState extends State<Bottom_BarAdmin> {
   List<Widget> ScreenList = [
     HomePageAdmin(),
     FeaturesAdmin(),
     CommunityAdmin(),
-    FavoriteAdmin(),
+    FavoriteAdmin(favoriteEvents: []),
     ProfileAdmin(),
   ];
   int SelectedIndex = 0;
