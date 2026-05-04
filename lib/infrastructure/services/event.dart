@@ -42,7 +42,7 @@ class EventServices {
         });
   }
 
-  ///delte event
+  ///delete event
   Future deleteEvent(String eventId) async {
     return await FirebaseFirestore.instance
         .collection(eventCollection)

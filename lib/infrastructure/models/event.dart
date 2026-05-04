@@ -8,7 +8,7 @@ class EventModel {
   final String? location;
   final String? eventdetails;
   final String? image;
-  final bool? isFavorite;
+  bool isFavorite; // ✅ final hata diya taake UI mein toggle ho sake
   final int? createAt;
   final DateTime? dateTime;
 
@@ -18,7 +18,7 @@ class EventModel {
     this.location,
     this.eventdetails,
     this.image,
-    this.isFavorite,
+    this.isFavorite = false,
     this.createAt,
     this.dateTime,
   });
@@ -42,7 +42,7 @@ class EventModel {
     "location": location,
     "eventdetails": eventdetails,
     "image": image,
-    "isFavorite": isFavorite ?? false,
+    "isFavorite": isFavorite,
     "createAt": createAt,
     "dateTime": dateTime?.millisecondsSinceEpoch,
   };

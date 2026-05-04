@@ -22,37 +22,46 @@ class _LoginAdminState extends State<LoginAdmin> {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
+    // 👉 RESPONSIVE HELPERS
+    final size = MediaQuery.of(context).size;
+    final w = size.width;
+    final h = size.height;
+
+    double rw(double value) => w * (value / 392); // base width scale
+    double rh(double value) => h * (value / 800); // base height scale
+
     return Scaffold(
       backgroundColor: isDark ? const Color(0xFF121212) : Colors.white,
       body: SingleChildScrollView(
         child: Container(
-          decoration: BoxDecoration(
-            image: const DecorationImage(
+          width: w,
+          decoration: const BoxDecoration(
+            image: DecorationImage(
               image: AssetImage("assets/images/walkingthrough_bck.png"),
               fit: BoxFit.cover,
             ),
           ),
           child: Column(
             children: [
-              const Gap(52.38),
+              Gap(rh(52)),
 
               Padding(
-                padding: const EdgeInsets.only(left: 20),
+                padding: EdgeInsets.only(left: rw(20)),
                 child: Row(
                   children: [
                     Text(
                       "Login",
                       style: GoogleFonts.poppins(
                         fontWeight: FontWeight.w600,
-                        fontSize: 24,
+                        fontSize: rw(24),
                         color: AppColors.primaryColor,
                       ),
                     ),
-                    const Gap(6),
+                    Gap(rw(6)),
                     Text(
                       "To Your Account",
                       style: GoogleFonts.poppins(
-                        fontSize: 24,
+                        fontSize: rw(24),
                         fontWeight: FontWeight.w600,
                         color: isDark ? Colors.white : AppColors.blackColor,
                       ),
@@ -62,43 +71,45 @@ class _LoginAdminState extends State<LoginAdmin> {
               ),
 
               Padding(
-                padding: const EdgeInsets.only(right: 127),
+                padding: EdgeInsets.only(right: rw(127)),
                 child: Text(
                   "Enter given detail to login to your ",
                   style: GoogleFonts.poppins(
                     fontWeight: FontWeight.w400,
+                    fontSize: rw(13),
                     color: isDark ? Colors.white : AppColors.blackColor,
                   ),
                 ),
               ),
 
               Padding(
-                padding: const EdgeInsets.only(right: 315),
+                padding: EdgeInsets.only(right: rw(300)),
                 child: Text(
                   " account",
                   style: GoogleFonts.poppins(
                     fontWeight: FontWeight.w400,
+                    fontSize: rw(13),
                     color: isDark ? Colors.white : AppColors.blackColor,
                   ),
                 ),
               ),
 
-              const Gap(114),
+              Gap(rh(82)),
 
               Padding(
-                padding: const EdgeInsets.only(right: 270),
+                padding: EdgeInsets.only(right: rw(260)),
                 child: Text(
                   "Phone number",
                   style: GoogleFonts.poppins(
                     fontWeight: FontWeight.w500,
-                    fontSize: 14,
+                    fontSize: rw(14),
                     color: isDark ? Colors.white : AppColors.blackColor,
                   ),
                 ),
               ),
 
               Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: EdgeInsets.all(rw(8)),
                 child: TextField(
                   controller: emailController,
                   style: TextStyle(color: isDark ? Colors.white : Colors.black),
@@ -118,22 +129,22 @@ class _LoginAdminState extends State<LoginAdmin> {
                 ),
               ),
 
-              const Gap(16),
+              Gap(rh(16)),
 
               Padding(
-                padding: const EdgeInsets.only(right: 316),
+                padding: EdgeInsets.only(right: rw(300)),
                 child: Text(
                   "Password",
                   style: GoogleFonts.poppins(
                     fontWeight: FontWeight.w500,
-                    fontSize: 14,
+                    fontSize: rw(14),
                     color: isDark ? Colors.white : AppColors.blackColor,
                   ),
                 ),
               ),
 
               Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: EdgeInsets.all(rw(8)),
                 child: TextField(
                   controller: passwordController,
                   obscureText: _isObscure,
@@ -166,25 +177,25 @@ class _LoginAdminState extends State<LoginAdmin> {
               ),
 
               Padding(
-                padding: const EdgeInsets.only(left: 230),
+                padding: EdgeInsets.only(left: rw(230)),
                 child: TextButton(
                   onPressed: () {},
                   child: Text(
                     "Forgot Password?",
                     style: GoogleFonts.poppins(
                       fontWeight: FontWeight.w600,
-                      fontSize: 16,
+                      fontSize: rw(14),
                       color: isDark ? Colors.white : AppColors.blackColor,
                     ),
                   ),
                 ),
               ),
 
-              const Gap(33),
+              Gap(rh(33)),
 
               SizedBox(
-                height: 56,
-                width: 392,
+                height: rh(56),
+                width: w * 0.9, // 👉 FIX instead of 392
                 child: ElevatedButton(
                   onPressed: () {},
                   style: ElevatedButton.styleFrom(
@@ -197,29 +208,29 @@ class _LoginAdminState extends State<LoginAdmin> {
                     "Login",
                     style: GoogleFonts.poppins(
                       fontWeight: FontWeight.w600,
-                      fontSize: 16,
+                      fontSize: rw(16),
                       color: AppColors.whiteColor,
                     ),
                   ),
                 ),
               ),
 
-              const Gap(62),
+              Gap(rh(62)),
 
               Text(
                 "OR",
                 style: GoogleFonts.poppins(
                   fontWeight: FontWeight.w600,
-                  fontSize: 16,
+                  fontSize: rw(16),
                   color: isDark ? Colors.white : AppColors.blackColor,
                 ),
               ),
 
-              const Gap(43),
+              Gap(rh(43)),
 
               SizedBox(
-                width: 392,
-                height: 56,
+                width: w * 0.9,
+                height: rh(56),
                 child: ElevatedButton(
                   onPressed: () {},
                   style: ElevatedButton.styleFrom(
@@ -235,15 +246,15 @@ class _LoginAdminState extends State<LoginAdmin> {
                     children: [
                       Image.asset(
                         AssetsConstants.icongoogle,
-                        height: 36,
-                        width: 36,
+                        height: rh(36),
+                        width: rh(36),
                       ),
-                      const SizedBox(width: 61),
+                      SizedBox(width: rw(30)),
                       Text(
                         "Continue with google",
                         style: GoogleFonts.poppins(
                           fontWeight: FontWeight.w600,
-                          fontSize: 14,
+                          fontSize: rw(14),
                           color: isDark
                               ? Colors.white
                               : AppColors.gotamblackColor,
@@ -254,7 +265,7 @@ class _LoginAdminState extends State<LoginAdmin> {
                 ),
               ),
 
-              const Gap(175),
+              Gap(rh(120)),
 
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -263,7 +274,7 @@ class _LoginAdminState extends State<LoginAdmin> {
                     "If you don’t have an account",
                     style: GoogleFonts.poppins(
                       fontWeight: FontWeight.w400,
-                      fontSize: 12,
+                      fontSize: rw(12),
                       color: isDark ? Colors.white : AppColors.blackColor,
                     ),
                   ),
@@ -280,7 +291,7 @@ class _LoginAdminState extends State<LoginAdmin> {
                       "Create Account",
                       style: GoogleFonts.poppins(
                         fontWeight: FontWeight.w400,
-                        fontSize: 15,
+                        fontSize: rw(14),
                         color: AppColors.primaryColor,
                       ),
                     ),
@@ -288,7 +299,7 @@ class _LoginAdminState extends State<LoginAdmin> {
                 ],
               ),
 
-              const Gap(33),
+              Gap(rh(33)),
             ],
           ),
         ),

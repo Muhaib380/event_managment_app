@@ -3,19 +3,24 @@ import 'package:event_managment_app/presentation/views/Provider/theme_provider.d
 import 'package:event_managment_app/presentation/views/admin/walkthroug.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
+import 'package:device_preview/device_preview.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
 
   runApp(
-    MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => ThemeProvider()),
-        ChangeNotifierProvider(create: (_) => UserProvider()),
-      ],
-      child: const MyApp(),
+    DevicePreview(
+      enabled: true,
+      builder: (context) => MultiProvider(
+        providers: [
+          ChangeNotifierProvider(create: (_) => ThemeProvider()),
+          ChangeNotifierProvider(create: (_) => UserProvider()),
+        ],
+        child: const MyApp(),
+      ),
     ),
   );
 }
@@ -26,42 +31,51 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
-    return MaterialApp(
-      title: 'Dark Mode App',
-      themeMode: themeProvider.themeMode,
-      debugShowCheckedModeBanner: false,
+    return ScreenUtilInit(
+      designSize: const Size(375, 882),
+      builder: (context, child) {
+        return MaterialApp(
+          useInheritedMediaQuery: true,
+          locale: DevicePreview.locale(context),
+          builder: DevicePreview.appBuilder,
+          title: 'Dark Mode App',
+          themeMode: themeProvider.themeMode,
+          debugShowCheckedModeBanner: false,
 
-      // LIGHT THEME
-      theme: ThemeData.light().copyWith(
-        scaffoldBackgroundColor: Colors.white,
-        appBarTheme: const AppBarTheme(backgroundColor: Colors.blue),
-      ),
+          // LIGHT THEME
+          theme: ThemeData.light().copyWith(
+            scaffoldBackgroundColor: Colors.white,
+            appBarTheme: const AppBarTheme(backgroundColor: Colors.blue),
+          ),
 
-      // DARK THEME (Yahan changes ki hain)
-      darkTheme: ThemeData(
-        brightness: Brightness.dark,
-        scaffoldBackgroundColor: Colors.black, // Puri app ka background Black
-        // 1. Sab Text ko White karne ke liye
-        textTheme: const TextTheme(
-          bodyLarge: TextStyle(color: Colors.white),
-          bodyMedium: TextStyle(color: Colors.white),
-          titleLarge: TextStyle(color: Colors.white),
-        ),
+          // DARK THEME (Yahan changes ki hain)
+          darkTheme: ThemeData(
+            brightness: Brightness.dark,
+            scaffoldBackgroundColor:
+                Colors.black, // Puri app ka background Black
+            // 1. Sab Text ko White karne ke liye
+            textTheme: const TextTheme(
+              bodyLarge: TextStyle(color: Colors.white),
+              bodyMedium: TextStyle(color: Colors.white),
+              titleLarge: TextStyle(color: Colors.white),
+            ),
 
-        // 2. Sab Icons ko White karne ke liye
-        iconTheme: const IconThemeData(color: Colors.white),
+            // 2. Sab Icons ko White karne ke liye
+            iconTheme: const IconThemeData(color: Colors.white),
 
-        // 3. Card ya Container ka color set karne ke liye
-        // (Dark mode mein containers ko halka dark rakha jata hai taake white text dikhe)
-        cardColor: Colors.grey,
+            // 3. Card ya Container ka color set karne ke liye
+            // (Dark mode mein containers ko halka dark rakha jata hai taake white text dikhe)
+            cardColor: Colors.grey,
 
-        appBarTheme: const AppBarTheme(
-          backgroundColor: Colors.black,
-          iconTheme: IconThemeData(color: Colors.white),
-          titleTextStyle: TextStyle(color: Colors.white, fontSize: 20),
-        ),
-      ),
-      home: WalkthroughAdmin(),
+            appBarTheme: const AppBarTheme(
+              backgroundColor: Colors.black,
+              iconTheme: IconThemeData(color: Colors.white),
+              titleTextStyle: TextStyle(color: Colors.white, fontSize: 20),
+            ),
+          ),
+          home: WalkthroughAdmin(),
+        );
+      },
     );
   }
 }

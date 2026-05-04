@@ -2,23 +2,27 @@ import 'package:event_managment_app/configurations/app_colors.dart';
 import 'package:event_managment_app/infrastructure/models/event.dart';
 import 'package:event_managment_app/infrastructure/services/event.dart';
 import 'package:event_managment_app/presentation/constants/assets_constants.dart';
-import 'package:event_managment_app/presentation/views/admin/favorite.dart';
+import 'package:event_managment_app/presentation/views/admin/Events.dart';
 import 'package:event_managment_app/presentation/views/event/evets_page.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class FeaturesAdmin extends StatefulWidget {
-  const FeaturesAdmin({super.key});
+  final Function(EventModel, bool) onFavoriteChanged;
+  final List<EventModel> favoriteEvents;
+
+  const FeaturesAdmin({
+    super.key,
+    required this.onFavoriteChanged,
+    required this.favoriteEvents,
+  });
 
   @override
   State<FeaturesAdmin> createState() => _FeaturesAdminState();
 }
 
 class _FeaturesAdminState extends State<FeaturesAdmin> {
-  Map<int, bool> favoriteMap = {};
-  List<EventModel> favoriteEvents = [];
-
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
@@ -71,7 +75,9 @@ class _FeaturesAdminState extends State<FeaturesAdmin> {
                     itemCount: events.length,
                     itemBuilder: (context, index) {
                       EventModel event = events[index];
-                      bool isFav = favoriteMap[index] ?? false;
+                      bool isFav = widget.favoriteEvents.any(
+                        (e) => e.docId == event.docId,
+                      );
 
                       return Column(
                         children: [
@@ -132,29 +138,10 @@ class _FeaturesAdminState extends State<FeaturesAdmin> {
                                           right: 10,
                                           child: GestureDetector(
                                             onTap: () {
-                                              setState(() {
-                                                favoriteMap[index] = !isFav;
-                                                if (!isFav) {
-                                                  favoriteEvents.add(event);
-                                                } else {
-                                                  favoriteEvents.removeWhere(
-                                                    (e) =>
-                                                        e.docId == event.docId,
-                                                  );
-                                                }
-                                              });
-                                              if (!isFav) {
-                                                Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        FavoriteAdmin(
-                                                          favoriteEvents:
-                                                              favoriteEvents,
-                                                        ),
-                                                  ),
-                                                );
-                                              }
+                                              widget.onFavoriteChanged(
+                                                event,
+                                                !isFav,
+                                              );
                                             },
                                             child: Icon(
                                               isFav
@@ -242,7 +229,7 @@ class _FeaturesAdminState extends State<FeaturesAdmin> {
                                             context,
                                             MaterialPageRoute(
                                               builder: (context) =>
-                                                  EventsPage(),
+                                                  EventsPageAdmin(),
                                             ),
                                           );
                                         },

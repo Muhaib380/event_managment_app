@@ -14,20 +14,37 @@ class Bottom_BarAdmin extends StatefulWidget {
   State<Bottom_BarAdmin> createState() => _Bottom_BarAdminState();
 }
 
-// i am trying to pulish repo
 class _Bottom_BarAdminState extends State<Bottom_BarAdmin> {
-  List<Widget> ScreenList = [
-    HomePageAdmin(),
-    FeaturesAdmin(),
-    CommunityAdmin(),
-    FavoriteAdmin(favoriteEvents: []),
-    ProfileAdmin(),
-  ];
+  List<EventModel> favoriteEvents = []; // ← yahan rakho
   int SelectedIndex = 0;
+
+  void onFavoriteChanged(EventModel event, bool isAdding) {
+    setState(() {
+      if (isAdding) {
+        if (!favoriteEvents.any((e) => e.docId == event.docId)) {
+          favoriteEvents.add(event);
+        }
+      } else {
+        favoriteEvents.removeWhere((e) => e.docId == event.docId);
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    List<Widget> screenList = [
+      HomePageAdmin(),
+      FeaturesAdmin(
+        onFavoriteChanged: onFavoriteChanged, // ← pass karo
+        favoriteEvents: favoriteEvents, // ← pass karo
+      ),
+      CommunityAdmin(),
+      FavoriteAdmin(favoriteEvents: favoriteEvents), // ← same list
+      ProfileAdmin(),
+    ];
+
     return Scaffold(
-      body: ScreenList.elementAt(SelectedIndex),
+      body: screenList.elementAt(SelectedIndex),
       bottomNavigationBar: BottomNavigationBar(
         selectedItemColor: AppColors.primaryColor,
         unselectedItemColor: AppColors.profilesetting,
@@ -39,7 +56,7 @@ class _Bottom_BarAdminState extends State<Bottom_BarAdmin> {
           });
         },
         currentIndex: SelectedIndex,
-        items: [
+        items: const [
           BottomNavigationBarItem(icon: Icon(Icons.pets), label: "Home"),
           BottomNavigationBarItem(
             icon: Icon(Icons.star_border),

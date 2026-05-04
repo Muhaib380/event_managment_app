@@ -3,6 +3,7 @@ import 'package:event_managment_app/presentation/constants/assets_constants.dart
 import 'package:event_managment_app/presentation/views/Group_profile/group_profile.dart';
 import 'package:event_managment_app/presentation/views/admin/Events/create_events.dart';
 import 'package:event_managment_app/presentation/views/admin/Events/upload_events.dart';
+import 'package:event_managment_app/presentation/views/admin/GroupProfile.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -139,7 +140,9 @@ class _CommunityAdminState extends State<CommunityAdmin> {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const GroupProfile()),
+                  MaterialPageRoute(
+                    builder: (context) => const GroupProfileAdmin(),
+                  ),
                 );
               },
             ),
