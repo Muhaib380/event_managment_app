@@ -4,6 +4,7 @@ import 'package:event_managment_app/presentation/constants/assets_constants.dart
 import 'package:event_managment_app/presentation/views/Bottome_Navigation_Bar/Bottome_Navigation/Navigation_Bar.dart';
 import 'package:event_managment_app/presentation/views/Login/create_account.dart';
 import 'package:event_managment_app/presentation/views/Provider/Provider.dart';
+import 'package:event_managment_app/presentation/views/admin/profile/Bottom_Bar.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -63,7 +64,7 @@ class _LoginState extends State<Login> {
                         fontWeight: FontWeight.w600,
                         color: isDark ? Colors.white : AppColors.blackColor,
                       ),
-                    )
+                    ),
                   ],
                 ),
               ),
@@ -108,16 +109,15 @@ class _LoginState extends State<Login> {
                 padding: const EdgeInsets.all(8.0),
                 child: TextField(
                   controller: emailController,
-                  style: TextStyle(
-                    color: isDark ? Colors.white : Colors.black,
-                  ),
+                  style: TextStyle(color: isDark ? Colors.white : Colors.black),
                   decoration: InputDecoration(
                     hintText: "Email",
                     hintStyle: TextStyle(
                       color: isDark ? Colors.white54 : Colors.grey,
                     ),
-                    fillColor:
-                    isDark ? const Color(0xFF1E1E1E) : AppColors.whiteColor,
+                    fillColor: isDark
+                        ? const Color(0xFF1E1E1E)
+                        : AppColors.whiteColor,
                     filled: true,
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
@@ -145,15 +145,11 @@ class _LoginState extends State<Login> {
                 child: TextField(
                   controller: passwordController,
                   obscureText: _isObscure,
-                  style: TextStyle(
-                    color: isDark ? Colors.white : Colors.black,
-                  ),
+                  style: TextStyle(color: isDark ? Colors.white : Colors.black),
                   decoration: InputDecoration(
                     suffixIcon: IconButton(
                       icon: Icon(
-                        _isObscure
-                            ? Icons.visibility_off
-                            : Icons.visibility,
+                        _isObscure ? Icons.visibility_off : Icons.visibility,
                         color: isDark ? Colors.white70 : Colors.black,
                       ),
                       onPressed: () {
@@ -166,8 +162,9 @@ class _LoginState extends State<Login> {
                     hintStyle: TextStyle(
                       color: isDark ? Colors.white54 : Colors.grey,
                     ),
-                    fillColor:
-                    isDark ? const Color(0xFF1E1E1E) : AppColors.whiteColor,
+                    fillColor: isDark
+                        ? const Color(0xFF1E1E1E)
+                        : AppColors.whiteColor,
                     filled: true,
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
@@ -192,54 +189,67 @@ class _LoginState extends State<Login> {
               ),
 
               const Gap(33),
-               SizedBox(
+              SizedBox(
                 height: 56,
                 width: 392,
-                child:
-                    isLoading? Center(child: CircularProgressIndicator(),)
-                   :ElevatedButton(
-                    onPressed: ()async{
-                    if(emailController.text.isEmpty || passwordController.text.isEmpty){
-                    ScaffoldMessenger.of(context)
-                    .showSnackBar(SnackBar(content: Text("Fill all fields")));
-                    return;
-                    }try{
-                    isLoading = true;
-                    setState(() {});
-                    await AuthServices().loginUser(
-                    email: emailController.text,
-                    password: passwordController.text
-                     ).then((val)async{
-                       isLoading = false;
-                       setState(() {});
-                       await UserServices().getUserProfile(val.uid)
-                       .then((userData){
-                         userPovider.setUser(userData);
-                         Navigator.push(context, MaterialPageRoute(builder: (context) => Bottom_Bar()));
-                       });
-                     });
-                   }catch(e){
-                     isLoading = false;
-                     setState(() {});
-                     ScaffoldMessenger.of(context)
-                     .showSnackBar(SnackBar(content: Text(e.toString())));
-                   }
-                 },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.primaryColor,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
-                  child: Text(
-                    "Login",
-                    style: GoogleFonts.poppins(
-                      fontWeight: FontWeight.w600,
-                      fontSize: 16,
-                      color: AppColors.whiteColor,
-                    ),
-                  ),
-                ),
+                child: isLoading
+                    ? Center(child: CircularProgressIndicator())
+                    : ElevatedButton(
+                        onPressed: () async {
+                          if (emailController.text.isEmpty ||
+                              passwordController.text.isEmpty) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text("Fill all fields")),
+                            );
+                            return;
+                          }
+                          try {
+                            isLoading = true;
+                            setState(() {});
+                            await AuthServices()
+                                .loginUser(
+                                  email: emailController.text,
+                                  password: passwordController.text,
+                                )
+                                .then((val) async {
+                                  isLoading = false;
+                                  setState(() {});
+                                  await UserServices()
+                                      .getUserProfile(val.uid)
+                                      .then((userData) {
+                                        userPovider.setUser(userData);
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                Bottom_BarAdmin(),
+                                          ),
+                                        );
+                                      });
+                                });
+                          } catch (e) {
+                            isLoading = false;
+                            setState(() {});
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text(e.toString())),
+                            );
+                          }
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.primaryColor,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                        child: Text(
+                          "Login",
+                          style: GoogleFonts.poppins(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 16,
+                            color: AppColors.whiteColor,
+                          ),
+                        ),
+                      ),
               ),
 
               const Gap(62),
@@ -261,8 +271,9 @@ class _LoginState extends State<Login> {
                 child: ElevatedButton(
                   onPressed: () {},
                   style: ElevatedButton.styleFrom(
-                    backgroundColor:
-                    isDark ? const Color(0xFF1E1E1E) : AppColors.whiteColor,
+                    backgroundColor: isDark
+                        ? const Color(0xFF1E1E1E)
+                        : AppColors.whiteColor,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
@@ -321,7 +332,7 @@ class _LoginState extends State<Login> {
                         color: AppColors.primaryColor,
                       ),
                     ),
-                  )
+                  ),
                 ],
               ),
 

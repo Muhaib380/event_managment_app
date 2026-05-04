@@ -18,32 +18,50 @@ class _FavoriteAdminState extends State<FavoriteAdmin> {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
+    // ✅ Responsive helpers
+    final size = MediaQuery.of(context).size;
+    final sw = size.width;
+    final sh = size.height;
+
     return SafeArea(
       child: Scaffold(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         body: SingleChildScrollView(
           child: Column(
             children: [
-              const Gap(29.38),
+              Gap(sh * 0.035), // ✅ was Gap(29.38)
+
               Row(
                 children: [
                   Padding(
-                    padding: const EdgeInsets.only(left: 20),
+                    padding: EdgeInsets.only(left: sw * 0.05), // ✅ was left: 20
                     child: Text(
                       "Favourite",
                       style: GoogleFonts.poppins(
                         fontWeight: FontWeight.w600,
-                        fontSize: 18,
+                        fontSize: sw * 0.045, // ✅ was 18
                         color: isDark ? Colors.white : Colors.black,
                       ),
                     ),
                   ),
                 ],
               ),
-              const Gap(22),
+
+              Gap(sh * 0.025), // ✅ was Gap(22)
 
               widget.favoriteEvents.isEmpty
-                  ? const Center(child: Text("No favourites yet"))
+                  ? Center(
+                      child: Padding(
+                        padding: EdgeInsets.only(top: sh * 0.1),
+                        child: Text(
+                          "No favourites yet",
+                          style: GoogleFonts.poppins(
+                            fontSize: sw * 0.04,
+                            color: isDark ? Colors.white54 : Colors.grey,
+                          ),
+                        ),
+                      ),
+                    )
                   : ListView.builder(
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
@@ -54,8 +72,11 @@ class _FavoriteAdminState extends State<FavoriteAdmin> {
                           children: [
                             Card(
                               color: isDark ? Colors.black : Colors.white,
+                              margin: EdgeInsets.symmetric(
+                                horizontal: sw * 0.03, // ✅ side spacing
+                              ),
                               child: Container(
-                                width: 392,
+                                width: double.infinity, // ✅ was hardcoded 392
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(12),
                                   border: Border.all(
@@ -65,9 +86,12 @@ class _FavoriteAdminState extends State<FavoriteAdmin> {
                                   ),
                                 ),
                                 child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
+                                  padding: EdgeInsets.all(
+                                    sw * 0.02,
+                                  ), // ✅ was 8.0
                                   child: Column(
                                     children: [
+                                      // ── Event Image ──────────────────
                                       ClipRRect(
                                         borderRadius: BorderRadius.circular(10),
                                         child:
@@ -75,8 +99,9 @@ class _FavoriteAdminState extends State<FavoriteAdmin> {
                                                 event.image!.isNotEmpty
                                             ? Image.network(
                                                 event.image!,
-                                                width: 368,
-                                                height: 210,
+                                                width: double
+                                                    .infinity, // ✅ was 368
+                                                height: sh * 0.25, // ✅ was 210
                                                 fit: BoxFit.cover,
                                                 errorBuilder:
                                                     (
@@ -87,23 +112,25 @@ class _FavoriteAdminState extends State<FavoriteAdmin> {
                                                       return Image.asset(
                                                         AssetsConstants
                                                             .blackday,
-                                                        width: 368,
-                                                        height: 210,
+                                                        width: double.infinity,
+                                                        height: sh * 0.25,
                                                         fit: BoxFit.cover,
                                                       );
                                                     },
                                               )
                                             : Image.asset(
                                                 AssetsConstants.blackday,
-                                                width: 368,
-                                                height: 210,
+                                                width: double.infinity,
+                                                height: sh * 0.25,
                                                 fit: BoxFit.cover,
                                               ),
                                       ),
-                                      const Gap(10),
+
+                                      Gap(sh * 0.012), // ✅ was Gap(10)
+                                      // ── Title ────────────────────────
                                       Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                          horizontal: 8,
+                                        padding: EdgeInsets.symmetric(
+                                          horizontal: sw * 0.02,
                                         ),
                                         child: Align(
                                           alignment: Alignment.centerLeft,
@@ -111,7 +138,7 @@ class _FavoriteAdminState extends State<FavoriteAdmin> {
                                             event.title ?? '',
                                             style: GoogleFonts.poppins(
                                               fontWeight: FontWeight.w600,
-                                              fontSize: 16,
+                                              fontSize: sw * 0.04, // ✅ was 16
                                               color: isDark
                                                   ? Colors.white
                                                   : Colors.black,
@@ -119,12 +146,14 @@ class _FavoriteAdminState extends State<FavoriteAdmin> {
                                           ),
                                         ),
                                       ),
+
+                                      // ── Date ─────────────────────────
                                       ListTile(
                                         leading: ImageIcon(
                                           AssetImage(
                                             AssetsConstants.icon_calendar,
                                           ),
-                                          size: 18,
+                                          size: sw * 0.045, // ✅ was 18
                                           color: isDark
                                               ? Colors.white
                                               : Colors.black,
@@ -133,19 +162,21 @@ class _FavoriteAdminState extends State<FavoriteAdmin> {
                                           event.dateTime.toString(),
                                           style: GoogleFonts.poppins(
                                             fontWeight: FontWeight.w300,
-                                            fontSize: 14,
+                                            fontSize: sw * 0.032, // ✅ was 14
                                             color: isDark
                                                 ? Colors.white
                                                 : Colors.black,
                                           ),
                                         ),
                                       ),
+
+                                      // ── Location ─────────────────────
                                       ListTile(
                                         leading: ImageIcon(
                                           AssetImage(
                                             AssetsConstants.icon_location,
                                           ),
-                                          size: 18,
+                                          size: sw * 0.045,
                                           color: isDark
                                               ? Colors.white
                                               : Colors.black,
@@ -154,16 +185,18 @@ class _FavoriteAdminState extends State<FavoriteAdmin> {
                                           event.location ?? '',
                                           style: GoogleFonts.poppins(
                                             fontWeight: FontWeight.w300,
-                                            fontSize: 14,
+                                            fontSize: sw * 0.032,
                                             color: isDark
                                                 ? Colors.white
                                                 : Colors.black,
                                           ),
                                         ),
                                       ),
+
+                                      // ── Button ───────────────────────
                                       SizedBox(
-                                        width: 368,
-                                        height: 48,
+                                        width: double.infinity, // ✅ was 368
+                                        height: sh * 0.06, // ✅ was 48
                                         child: ElevatedButton(
                                           onPressed: () {},
                                           style: ElevatedButton.styleFrom(
@@ -178,7 +211,7 @@ class _FavoriteAdminState extends State<FavoriteAdmin> {
                                             "Add to my calendar",
                                             style: GoogleFonts.poppins(
                                               fontWeight: FontWeight.w600,
-                                              fontSize: 16,
+                                              fontSize: sw * 0.038, // ✅ was 16
                                               color: Colors.white,
                                             ),
                                           ),
@@ -189,7 +222,7 @@ class _FavoriteAdminState extends State<FavoriteAdmin> {
                                 ),
                               ),
                             ),
-                            const Gap(24),
+                            Gap(sh * 0.03), // ✅ was Gap(24)
                           ],
                         );
                       },

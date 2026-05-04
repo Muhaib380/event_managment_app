@@ -19,13 +19,14 @@ class UserModel {
     this.profileImage,
   });
 
-  factory UserModel.fromJson(Map<String, dynamic> json) => UserModel(
-    docId: json["docId"],
-    userName: json["userName"],
-    email: json["email"],
-    password: json["password"],
-    profileImage: json["profileImage"],
-  );
+  factory UserModel.fromJson(Map<String, dynamic> json, {String? docId}) =>
+      UserModel(
+        docId: docId ?? json["docId"], // ✅
+        userName: json["userName"],
+        email: json["email"],
+        password: json["password"],
+        profileImage: json["profileImage"],
+      );
 
   Map<String, dynamic> toJson() {
     final data = <String, dynamic>{};

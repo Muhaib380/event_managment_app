@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 VoteModel voteModelFromJson(String str) => VoteModel.fromJson(json.decode(str));
 
@@ -26,7 +27,9 @@ class VoteModel {
         ? []
         : List<String>.from(json["option"]!.map((x) => x)),
     image: json["image"],
-    createAt: json["createAt"],
+    createAt: json["createdAt"] is Timestamp
+        ? (json["createdAt"] as Timestamp).millisecondsSinceEpoch
+        : json["createdAt"] as int?,
   );
 
   Map<String, dynamic> toJson() => {
@@ -34,6 +37,6 @@ class VoteModel {
     "question": question,
     "option": option == null ? [] : List<dynamic>.from(option!.map((x) => x)),
     "image": image,
-    "createAt": createAt,
+    "createdAt": createAt,
   };
 }

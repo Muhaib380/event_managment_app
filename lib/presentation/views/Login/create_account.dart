@@ -2,6 +2,8 @@ import 'package:event_managment_app/infrastructure/models/user.dart';
 import 'package:event_managment_app/infrastructure/services/auth.dart';
 import 'package:event_managment_app/infrastructure/services/user.dart';
 import 'package:event_managment_app/presentation/views/Bottome_Navigation_Bar/Bottome_Navigation/Navigation_Bar.dart';
+import 'package:event_managment_app/presentation/views/Login/login.dart';
+import 'package:event_managment_app/presentation/views/admin/profile/Bottom_Bar.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -222,9 +224,7 @@ class _CreateAccountState extends State<CreateAccount> {
                         onPressed: () async {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(
-                              builder: (context) => Bottom_Bar(),
-                            ),
+                            MaterialPageRoute(builder: (context) => Login()),
                           );
                           try {
                             isLoading = true;

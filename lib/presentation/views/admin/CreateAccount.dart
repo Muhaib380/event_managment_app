@@ -33,6 +33,11 @@ class _CreateAccountAdminState extends State<CreateAccountAdmin> {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
+    // ✅ Responsive helpers
+    final size = MediaQuery.of(context).size;
+    final sw = size.width;
+    final sh = size.height;
+
     return Scaffold(
       backgroundColor: isDark ? const Color(0xFF121212) : Colors.white,
       body: SingleChildScrollView(
@@ -40,30 +45,30 @@ class _CreateAccountAdminState extends State<CreateAccountAdmin> {
           decoration: const BoxDecoration(
             image: DecorationImage(
               image: AssetImage("assets/images/walkingthrough_bck.png"),
-              fit: BoxFit.cover,
+              fit: BoxFit.cover, // ✅ background responsive
             ),
           ),
           child: Column(
             children: [
-              const Gap(55),
+              Gap(sh * 0.07), // ✅ was const Gap(55)
 
               Padding(
-                padding: const EdgeInsets.only(left: 20),
+                padding: EdgeInsets.only(left: sw * 0.05), // ✅ was left: 20
                 child: Row(
                   children: [
                     Text(
                       "Create",
                       style: GoogleFonts.poppins(
                         fontWeight: FontWeight.w600,
-                        fontSize: 26,
+                        fontSize: sw * 0.065, // ✅ was 26
                         color: AppColors.primaryColor,
                       ),
                     ),
-                    const Gap(6),
+                    Gap(sw * 0.015), // ✅ was Gap(6)
                     Text(
                       "Account",
                       style: GoogleFonts.poppins(
-                        fontSize: 26,
+                        fontSize: sw * 0.065,
                         fontWeight: FontWeight.w600,
                         color: isDark ? Colors.white : AppColors.blackColor,
                       ),
@@ -73,56 +78,74 @@ class _CreateAccountAdminState extends State<CreateAccountAdmin> {
               ),
 
               Padding(
-                padding: const EdgeInsets.only(right: 138),
+                padding: EdgeInsets.only(right: sw * 0.35), // ✅ was right: 138
                 child: Text(
                   "Enter given detail to create your",
                   style: GoogleFonts.poppins(
                     fontWeight: FontWeight.w400,
+                    fontSize: sw * 0.035,
                     color: isDark ? Colors.white : AppColors.gotamblackColor,
                   ),
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.only(right: 310),
+                padding: EdgeInsets.only(right: sw * 0.78), // ✅ was right: 310
                 child: Text(
                   "account",
                   style: GoogleFonts.poppins(
                     fontWeight: FontWeight.w400,
+                    fontSize: sw * 0.035,
                     color: isDark ? Colors.white : AppColors.gotamblackColor,
                   ),
                 ),
               ),
 
-              const Gap(40),
+              Gap(sh * 0.05), // ✅ was Gap(40)
+
               Padding(
-                padding: const EdgeInsets.only(left: 16, right: 12),
+                padding: EdgeInsets.only(
+                  left: sw * 0.04,
+                  right: sw * 0.03,
+                ), // ✅ was left:16 right:12
                 child: Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
                     "Email",
                     style: GoogleFonts.poppins(
                       fontWeight: FontWeight.w500,
-                      fontSize: 14,
+                      fontSize: sw * 0.035,
                       color: isDark ? Colors.white : AppColors.blackColor,
                     ),
                   ),
                 ),
               ),
 
-              // Email Field
+              // ── Email Field ─────────────────────────────────
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                padding: EdgeInsets.symmetric(
+                  horizontal: sw * 0.03,
+                  vertical: sh * 0.01,
+                ),
                 child: TextField(
                   controller: emailController,
                   keyboardType: TextInputType.emailAddress,
                   enableSuggestions: false,
                   autocorrect: false,
-                  style: TextStyle(color: isDark ? Colors.white : Colors.black),
+                  style: TextStyle(
+                    color: isDark ? Colors.white : Colors.black,
+                    fontSize: sw * 0.038,
+                  ),
                   decoration: InputDecoration(
                     labelText: "Email",
                     hintText: "Enter email",
-                    hintStyle: TextStyle(color: isDark ? Colors.white54 : Colors.grey),
-                    labelStyle: TextStyle(color: isDark ? Colors.white : AppColors.blackColor),
+                    hintStyle: TextStyle(
+                      color: isDark ? Colors.white54 : Colors.grey,
+                      fontSize: sw * 0.035,
+                    ),
+                    labelStyle: TextStyle(
+                      color: isDark ? Colors.white : AppColors.blackColor,
+                      fontSize: sw * 0.035,
+                    ),
                     fillColor: isDark ? const Color(0xFF1E1E1E) : Colors.white,
                     filled: true,
                     border: OutlineInputBorder(
@@ -132,24 +155,29 @@ class _CreateAccountAdminState extends State<CreateAccountAdmin> {
                 ),
               ),
 
-              const Gap(16),
+              Gap(sh * 0.02), // ✅ was Gap(16)
+
               Padding(
-                padding: const EdgeInsets.only(left: 16, right: 12),
+                padding: EdgeInsets.only(left: sw * 0.04, right: sw * 0.03),
                 child: Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
                     "Password",
                     style: GoogleFonts.poppins(
                       fontWeight: FontWeight.w500,
-                      fontSize: 14,
+                      fontSize: sw * 0.035,
                       color: isDark ? Colors.white : AppColors.blackColor,
                     ),
                   ),
                 ),
               ),
-              // Password Field
+
+              // ── Password Field ──────────────────────────────
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                padding: EdgeInsets.symmetric(
+                  horizontal: sw * 0.03,
+                  vertical: sh * 0.01,
+                ),
                 child: TextField(
                   key: const ValueKey('adminPassword'),
                   controller: passwordController,
@@ -157,18 +185,30 @@ class _CreateAccountAdminState extends State<CreateAccountAdmin> {
                   enableSuggestions: false,
                   autocorrect: false,
                   autofillHints: const [AutofillHints.newPassword],
-                  style: TextStyle(color: isDark ? Colors.white : Colors.black),
+                  style: TextStyle(
+                    color: isDark ? Colors.white : Colors.black,
+                    fontSize: sw * 0.038,
+                  ),
                   decoration: InputDecoration(
                     labelText: "Password",
                     hintText: "Enter password",
-                    hintStyle: TextStyle(color: isDark ? Colors.white54 : Colors.grey),
-                    labelStyle: TextStyle(color: isDark ? Colors.white : AppColors.blackColor),
+                    hintStyle: TextStyle(
+                      color: isDark ? Colors.white54 : Colors.grey,
+                      fontSize: sw * 0.035,
+                    ),
+                    labelStyle: TextStyle(
+                      color: isDark ? Colors.white : AppColors.blackColor,
+                      fontSize: sw * 0.035,
+                    ),
                     fillColor: isDark ? const Color(0xFF1E1E1E) : Colors.white,
                     filled: true,
                     suffixIcon: IconButton(
                       icon: Icon(
-                        _isObscurePassword ? Icons.visibility_off : Icons.visibility,
+                        _isObscurePassword
+                            ? Icons.visibility_off
+                            : Icons.visibility,
                         color: isDark ? Colors.white : Colors.black,
+                        size: sw * 0.055,
                       ),
                       onPressed: () {
                         setState(() {
@@ -183,25 +223,29 @@ class _CreateAccountAdminState extends State<CreateAccountAdmin> {
                 ),
               ),
 
-              const Gap(16),
+              Gap(sh * 0.02),
+
               Padding(
-                padding: const EdgeInsets.only(left: 16, right: 12),
+                padding: EdgeInsets.only(left: sw * 0.04, right: sw * 0.03),
                 child: Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
                     "Confirm Password",
                     style: GoogleFonts.poppins(
                       fontWeight: FontWeight.w500,
-                      fontSize: 14,
+                      fontSize: sw * 0.035,
                       color: isDark ? Colors.white : AppColors.blackColor,
                     ),
                   ),
                 ),
               ),
 
-              // Confirm Password Field
+              // ── Confirm Password Field ──────────────────────
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                padding: EdgeInsets.symmetric(
+                  horizontal: sw * 0.03,
+                  vertical: sh * 0.01,
+                ),
                 child: TextField(
                   key: const ValueKey('adminConfirmPassword'),
                   controller: confirmpasswordController,
@@ -209,18 +253,30 @@ class _CreateAccountAdminState extends State<CreateAccountAdmin> {
                   enableSuggestions: false,
                   autocorrect: false,
                   autofillHints: null,
-                  style: TextStyle(color: isDark ? Colors.white : Colors.black),
+                  style: TextStyle(
+                    color: isDark ? Colors.white : Colors.black,
+                    fontSize: sw * 0.038,
+                  ),
                   decoration: InputDecoration(
                     labelText: "Confirm Password",
                     hintText: "Enter confirm password",
-                    hintStyle: TextStyle(color: isDark ? Colors.white54 : Colors.grey),
-                    labelStyle: TextStyle(color: isDark ? Colors.white : AppColors.blackColor),
+                    hintStyle: TextStyle(
+                      color: isDark ? Colors.white54 : Colors.grey,
+                      fontSize: sw * 0.035,
+                    ),
+                    labelStyle: TextStyle(
+                      color: isDark ? Colors.white : AppColors.blackColor,
+                      fontSize: sw * 0.035,
+                    ),
                     fillColor: isDark ? const Color(0xFF1E1E1E) : Colors.white,
                     filled: true,
                     suffixIcon: IconButton(
                       icon: Icon(
-                        _isObscureConfirm ? Icons.visibility_off : Icons.visibility,
+                        _isObscureConfirm
+                            ? Icons.visibility_off
+                            : Icons.visibility,
                         color: isDark ? Colors.white : Colors.black,
+                        size: sw * 0.055,
                       ),
                       onPressed: () {
                         setState(() {
@@ -235,86 +291,102 @@ class _CreateAccountAdminState extends State<CreateAccountAdmin> {
                 ),
               ),
 
-              const Gap(62),
-
-              SizedBox(
-                height: 56,
-                width: 392,
-                child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => Bottom_BarAdmin()),
-                    );
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.primaryColor,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
+              Gap(sh * 0.08), // ✅ was Gap(62)
+              // ── Continue Button ─────────────────────────────
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: sw * 0.03),
+                child: SizedBox(
+                  height: sh * 0.07, // ✅ was hardcoded 56
+                  width: double.infinity, // ✅ was hardcoded 392
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => Bottom_BarAdmin(),
+                        ),
+                      );
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.primaryColor,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
                     ),
-                  ),
-                  child: Text(
-                    "Continue",
-                    style: GoogleFonts.poppins(
-                      fontWeight: FontWeight.w600,
-                      fontSize: 16,
-                      color: AppColors.whiteColor,
+                    child: Text(
+                      "Continue",
+                      style: GoogleFonts.poppins(
+                        fontWeight: FontWeight.w600,
+                        fontSize: sw * 0.04,
+                        color: AppColors.whiteColor,
+                      ),
                     ),
                   ),
                 ),
               ),
 
-              const Gap(36),
+              Gap(sh * 0.045), // ✅ was Gap(36)
 
               Text(
                 "OR",
                 style: GoogleFonts.poppins(
                   fontWeight: FontWeight.w600,
-                  fontSize: 16,
+                  fontSize: sw * 0.04,
                   color: isDark ? Colors.white : AppColors.blackColor,
                 ),
               ),
 
-              const Gap(52),
-
-              SizedBox(
-                width: 392,
-                height: 56,
-                child: ElevatedButton(
-                  onPressed: () {},
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: isDark ? const Color(0xFF1E1E1E) : Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Image.asset(AssetsConstants.icongoogle, height: 36, width: 36),
-                      const SizedBox(width: 20),
-                      Text(
-                        "Continue with google",
-                        style: GoogleFonts.poppins(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 14,
-                          color: isDark ? Colors.white : AppColors.gotamblackColor,
-                        ),
+              Gap(sh * 0.065), // ✅ was Gap(52)
+              // ── Google Button ───────────────────────────────
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: sw * 0.03),
+                child: SizedBox(
+                  width: double.infinity, // ✅ was hardcoded 392
+                  height: sh * 0.07, // ✅ was hardcoded 56
+                  child: ElevatedButton(
+                    onPressed: () {},
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: isDark
+                          ? const Color(0xFF1E1E1E)
+                          : Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
                       ),
-                    ],
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Image.asset(
+                          AssetsConstants.icongoogle,
+                          height: sw * 0.09, // ✅ was hardcoded 36
+                          width: sw * 0.09,
+                        ),
+                        SizedBox(width: sw * 0.05), // ✅ was SizedBox(width: 20)
+                        Text(
+                          "Continue with google",
+                          style: GoogleFonts.poppins(
+                            fontWeight: FontWeight.w600,
+                            fontSize: sw * 0.035,
+                            color: isDark
+                                ? Colors.white
+                                : AppColors.gotamblackColor,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
 
-              const Gap(80),
-
+              Gap(sh * 0.1), // ✅ was Gap(80)
+              // ── Login Row ───────────────────────────────────
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
                     "If you don't have an account",
                     style: GoogleFonts.poppins(
-                      fontSize: 12,
+                      fontSize: sw * 0.03,
                       color: isDark ? Colors.white : AppColors.blackColor,
                     ),
                   ),
@@ -323,7 +395,7 @@ class _CreateAccountAdminState extends State<CreateAccountAdmin> {
                     child: Text(
                       "Login",
                       style: GoogleFonts.poppins(
-                        fontSize: 15,
+                        fontSize: sw * 0.038,
                         color: AppColors.primaryColor,
                       ),
                     ),
@@ -331,7 +403,7 @@ class _CreateAccountAdminState extends State<CreateAccountAdmin> {
                 ],
               ),
 
-              const Gap(30),
+              Gap(sh * 0.04), // ✅ was Gap(30)
             ],
           ),
         ),

@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gap/gap.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:intl/intl.dart'; // ✅ pubspec mein add karo: intl
+import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class HomePageAdmin extends StatefulWidget {
@@ -22,13 +22,11 @@ class _HomePageAdminState extends State<HomePageAdmin> {
   DateTime? _selectedDay = DateTime.now();
   bool isCalendarView = true;
 
-  // ✅ Selected day ke events EventsRepository se lao
   List<EventModel> get _selectedDayEvents {
     if (_selectedDay == null) return [];
     return EventsRepository.getEventsForDay(_selectedDay!);
   }
 
-  // ✅ Heading text — aaj hai to "Today Events", warna selected date
   String get _eventsSectionTitle {
     final now = DateTime.now();
     if (_selectedDay != null &&
@@ -44,6 +42,11 @@ class _HomePageAdminState extends State<HomePageAdmin> {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
+    // ✅ Responsive helpers
+    final size = MediaQuery.of(context).size;
+    final sw = size.width;
+    final sh = size.height;
+
     return Scaffold(
       backgroundColor: isDark ? const Color(0xFF121212) : Colors.white,
       appBar: AppBar(
@@ -53,7 +56,7 @@ class _HomePageAdminState extends State<HomePageAdmin> {
           "Events",
           style: GoogleFonts.poppins(
             fontWeight: FontWeight.w600,
-            fontSize: 18,
+            fontSize: sw * 0.045, // ✅ was 18
             color: isDark ? Colors.white : AppColors.blackColor,
           ),
         ),
@@ -62,9 +65,9 @@ class _HomePageAdminState extends State<HomePageAdmin> {
             icon: Icon(
               Icons.tune_outlined,
               color: isDark ? Colors.white : Colors.black,
+              size: sw * 0.06, // ✅ responsive icon size
             ),
             onPressed: () {
-              // ✅ Alag file se FilterDialog call ho raha hai
               showDialog(
                 context: context,
                 builder: (context) => const FilterDialog(),
@@ -76,28 +79,27 @@ class _HomePageAdminState extends State<HomePageAdmin> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            const Gap(10),
-
+            Gap(sh * 0.012), // ✅ was Gap(10)
             // ── TOGGLE ──────────────────────────────────────────
             Container(
-              height: 56,
+              height: sh * 0.07, // ✅ was 56
               color: isDark ? const Color(0xFF1E1E1E) : AppColors.listtile,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  toggle("Calendar View", true, isDark),
-                  const Gap(40),
-                  toggle("List View", false, isDark),
+                  toggle("Calendar View", true, isDark, sw, sh),
+                  Gap(sw * 0.1), // ✅ was Gap(40)
+                  toggle("List View", false, isDark, sw, sh),
                 ],
               ),
             ),
 
-            const Gap(20),
+            Gap(sh * 0.025), // ✅ was Gap(20)
 
             if (isCalendarView) ...[
               // ── CALENDAR ───────────────────────────────────────
               Padding(
-                padding: const EdgeInsets.all(16),
+                padding: EdgeInsets.all(sw * 0.04), // ✅ was 16
                 child: TableCalendar(
                   firstDay: DateTime.utc(2020, 1, 1),
                   lastDay: DateTime.utc(2030, 12, 31),
@@ -117,26 +119,33 @@ class _HomePageAdminState extends State<HomePageAdmin> {
                     titleCentered: true,
                     titleTextStyle: GoogleFonts.poppins(
                       fontWeight: FontWeight.w600,
-                      fontSize: 16,
+                      fontSize: sw * 0.04, // ✅ was 16
                       color: isDark ? Colors.white : Colors.black,
                     ),
                     leftChevronIcon: Icon(
                       Icons.chevron_left,
                       color: isDark ? Colors.white : Colors.black,
+                      size: sw * 0.06,
                     ),
                     rightChevronIcon: Icon(
                       Icons.chevron_right,
                       color: isDark ? Colors.white : Colors.black,
+                      size: sw * 0.06,
                     ),
                   ),
                   calendarStyle: CalendarStyle(
                     defaultTextStyle: TextStyle(
                       color: isDark ? Colors.white : Colors.black,
+                      fontSize: sw * 0.033,
                     ),
                     weekendTextStyle: TextStyle(
                       color: isDark ? Colors.white70 : Colors.black,
+                      fontSize: sw * 0.033,
                     ),
-                    outsideTextStyle: const TextStyle(color: Colors.grey),
+                    outsideTextStyle: TextStyle(
+                      color: Colors.grey,
+                      fontSize: sw * 0.033,
+                    ),
                     selectedDecoration: BoxDecoration(
                       color: AppColors.primaryColor,
                       shape: BoxShape.circle,
@@ -148,42 +157,41 @@ class _HomePageAdminState extends State<HomePageAdmin> {
                     todayTextStyle: TextStyle(
                       color: isDark ? Colors.white : Colors.black,
                       fontWeight: FontWeight.bold,
+                      fontSize: sw * 0.033,
                     ),
                   ),
                 ),
               ),
 
-              const Gap(8),
-
+              Gap(sh * 0.01), // ✅ was Gap(8)
               // ✅ "Today Events" / "Date Events" HEADING
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
+                padding: EdgeInsets.symmetric(horizontal: sw * 0.04),
                 child: Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
                     _eventsSectionTitle,
                     style: GoogleFonts.poppins(
                       fontWeight: FontWeight.w600,
-                      fontSize: 18,
+                      fontSize: sw * 0.045, // ✅ was 18
                       color: isDark ? Colors.white : AppColors.blackColor,
                     ),
                   ),
                 ),
               ),
 
-              const Gap(12),
-
-              // ✅ DYNAMIC EVENT CARDS — EventsRepository se
+              Gap(sh * 0.015), // ✅ was Gap(12)
+              // ✅ DYNAMIC EVENT CARDS
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
+                padding: EdgeInsets.symmetric(horizontal: sw * 0.04),
                 child: _selectedDayEvents.isEmpty
                     ? Center(
                         child: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 32),
+                          padding: EdgeInsets.symmetric(vertical: sh * 0.04),
                           child: Text(
                             "No events for this day",
                             style: GoogleFonts.poppins(
-                              fontSize: 14,
+                              fontSize: sw * 0.035,
                               color: isDark ? Colors.white54 : Colors.grey,
                             ),
                           ),
@@ -193,27 +201,27 @@ class _HomePageAdminState extends State<HomePageAdmin> {
                         children: _selectedDayEvents
                             .map(
                               (event) => Padding(
-                                padding: const EdgeInsets.only(bottom: 16),
-                                child: _buildEventCard(event, isDark),
+                                padding: EdgeInsets.only(bottom: sh * 0.02),
+                                child: _buildEventCard(event, isDark, sw, sh),
                               ),
                             )
                             .toList(),
                       ),
               ),
 
-              const Gap(30),
+              Gap(sh * 0.04), // ✅ was Gap(30)
             ] else ...[
               // ── LIST VIEW ──────────────────────────────────────
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
+                padding: EdgeInsets.symmetric(horizontal: sw * 0.04),
                 child: EventsRepository.getAllEvents().isEmpty
                     ? Center(
                         child: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 32),
+                          padding: EdgeInsets.symmetric(vertical: sh * 0.04),
                           child: Text(
                             "No events created yet",
                             style: GoogleFonts.poppins(
-                              fontSize: 14,
+                              fontSize: sw * 0.035,
                               color: isDark ? Colors.white54 : Colors.grey,
                             ),
                           ),
@@ -223,14 +231,14 @@ class _HomePageAdminState extends State<HomePageAdmin> {
                         children: EventsRepository.getAllEvents()
                             .map(
                               (event) => Padding(
-                                padding: const EdgeInsets.only(bottom: 16),
-                                child: _buildEventCard(event, isDark),
+                                padding: EdgeInsets.only(bottom: sh * 0.02),
+                                child: _buildEventCard(event, isDark, sw, sh),
                               ),
                             )
                             .toList(),
                       ),
               ),
-              const Gap(30),
+              Gap(sh * 0.04),
             ],
           ],
         ),
@@ -238,8 +246,8 @@ class _HomePageAdminState extends State<HomePageAdmin> {
     );
   }
 
-  // ✅ DYNAMIC EVENT CARD — EventModel se data leta hai
-  Widget _buildEventCard(EventModel event, bool isDark) {
+  // ✅ DYNAMIC EVENT CARD — responsive
+  Widget _buildEventCard(EventModel event, bool isDark, double sw, double sh) {
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
@@ -255,26 +263,26 @@ class _HomePageAdminState extends State<HomePageAdmin> {
                     borderRadius: BorderRadius.circular(8),
                     child: Image.network(
                       event.image!,
-                      width: 50,
-                      height: 46,
+                      width: sw * 0.12, // ✅ was 50
+                      height: sw * 0.12,
                       fit: BoxFit.cover,
                       errorBuilder: (_, __, ___) => Image.asset(
                         AssetsConstants.tech_metup,
-                        width: 50,
-                        height: 46,
+                        width: sw * 0.12,
+                        height: sw * 0.12,
                       ),
                     ),
                   )
                 : Image.asset(
                     AssetsConstants.tech_metup,
-                    width: 50,
-                    height: 46,
+                    width: sw * 0.12,
+                    height: sw * 0.12,
                   ),
             title: Text(
               event.title ?? "No Title",
               style: GoogleFonts.poppins(
                 fontWeight: FontWeight.w500,
-                fontSize: 16,
+                fontSize: sw * 0.04, // ✅ was 16
                 color: isDark ? Colors.white : AppColors.blackColor,
               ),
             ),
@@ -283,11 +291,10 @@ class _HomePageAdminState extends State<HomePageAdmin> {
                   ? DateFormat('EEE, d MMM yyyy, h:mma').format(event.dateTime!)
                   : "Date not set",
               style: GoogleFonts.poppins(
-                fontSize: 14,
+                fontSize: sw * 0.032, // ✅ was 14
                 color: isDark ? Colors.white70 : AppColors.homesub,
               ),
             ),
-            // ✅ Favorite toggle
             trailing: GestureDetector(
               onTap: () {
                 setState(() {
@@ -299,26 +306,31 @@ class _HomePageAdminState extends State<HomePageAdmin> {
                 color: event.isFavorite
                     ? Colors.red
                     : (isDark ? Colors.white70 : Colors.grey),
+                size: sw * 0.055,
               ),
             ),
           ),
           ListTile(
-            leading: Icon(Icons.location_on, color: AppColors.primaryColor),
+            leading: Icon(
+              Icons.location_on,
+              color: AppColors.primaryColor,
+              size: sw * 0.055,
+            ),
             title: Text(
               event.location ?? "No location",
               style: GoogleFonts.poppins(
-                fontSize: 14,
+                fontSize: sw * 0.032,
                 color: isDark ? Colors.white : AppColors.blackColor,
               ),
             ),
           ),
           Padding(
-            padding: const EdgeInsets.only(left: 16, bottom: 12),
+            padding: EdgeInsets.only(left: sw * 0.04, bottom: sh * 0.015),
             child: Align(
               alignment: Alignment.centerLeft,
               child: SizedBox(
-                width: 190,
-                height: 45,
+                width: sw * 0.48, // ✅ was 190
+                height: sh * 0.055, // ✅ was 45
                 child: ElevatedButton(
                   onPressed: () {},
                   style: ElevatedButton.styleFrom(
@@ -332,7 +344,7 @@ class _HomePageAdminState extends State<HomePageAdmin> {
                   child: Text(
                     "Add to my calendar",
                     style: GoogleFonts.poppins(
-                      fontSize: 14,
+                      fontSize: sw * 0.032,
                       color: Colors.white,
                     ),
                   ),
@@ -345,13 +357,13 @@ class _HomePageAdminState extends State<HomePageAdmin> {
     );
   }
 
-  // ... toggle(), chip(), dropdown() same rahenge
-  Widget toggle(String text, bool value, bool isDark) {
+  // ✅ Toggle — responsive
+  Widget toggle(String text, bool value, bool isDark, double sw, double sh) {
     return GestureDetector(
       onTap: () => setState(() => isCalendarView = value),
       child: Container(
-        width: 140,
-        height: 40,
+        width: sw * 0.35, // ✅ was 140
+        height: sh * 0.05, // ✅ was 40
         decoration: BoxDecoration(
           color: isCalendarView == value
               ? AppColors.primaryColor
@@ -362,6 +374,7 @@ class _HomePageAdminState extends State<HomePageAdmin> {
           child: Text(
             text,
             style: TextStyle(
+              fontSize: sw * 0.035,
               color: isCalendarView == value
                   ? Colors.white
                   : (isDark ? Colors.white70 : Colors.grey),

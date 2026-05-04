@@ -1,4 +1,8 @@
 import 'dart:io';
+import 'package:event_managment_app/infrastructure/models/vote.dart';
+import 'package:event_managment_app/infrastructure/services/cloudnary.dart';
+import 'package:event_managment_app/infrastructure/services/image_piker.dart';
+import 'package:event_managment_app/infrastructure/services/vote.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -15,7 +19,14 @@ class UplaodEventAdmin extends StatefulWidget {
 
 class _UplaodEventAdminState extends State<UplaodEventAdmin>
     with SingleTickerProviderStateMixin {
+  TextEditingController questionController = TextEditingController();
+  TextEditingController option1Controller = TextEditingController();
+  TextEditingController option2Controller = TextEditingController();
+  final CloudinaryService _cloudinaryService = CloudinaryService();
+  final ImagePickerService _imagePicker = ImagePickerService();
+  String? ImageUrl;
   File? _selectedImage;
+  bool isLoading = false;
   bool _isUploading = false;
   bool _uploadDone = false;
 
@@ -50,6 +61,7 @@ class _UplaodEventAdminState extends State<UplaodEventAdmin>
     super.dispose();
   }
 
+  // ✅ UPDATED LOGIC: Ab ye Cloudinary par upload karega
   Future<void> _pickImage() async {
     final XFile? pickedFile = await _picker.pickImage(
       source: ImageSource.gallery,
@@ -62,23 +74,38 @@ class _UplaodEventAdminState extends State<UplaodEventAdmin>
         _selectedImage = null;
       });
 
-      // Simulate upload delay with animation
-      await Future.delayed(const Duration(milliseconds: 1200));
+      try {
+        // Cloudinary se URL fetch karein
+        String? url = await _cloudinaryService.uploadImage(
+          File(pickedFile.path),
+        );
 
-      setState(() {
-        _selectedImage = File(pickedFile.path);
-        _isUploading = false;
-        _uploadDone = true;
-      });
-
-      _animController.forward(from: 0);
+        if (url != null) {
+          setState(() {
+            ImageUrl = url; // Yahan URL save ho gaya
+            _selectedImage = File(pickedFile.path);
+            _isUploading = false;
+            _uploadDone = true;
+          });
+          _animController.forward(from: 0);
+        } else {
+          setState(() => _isUploading = false);
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(const SnackBar(content: Text("Upload failed!")));
+        }
+      } catch (e) {
+        setState(() => _isUploading = false);
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(e.toString())));
+      }
     }
   }
 
   @override
   Widget build(BuildContext context) {
     bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
-
     Color textColor = isDarkMode ? Colors.white : AppColors.blackColor;
     Color appBarBg = isDarkMode ? Colors.grey[900]! : AppColors.whiteColor;
     Color hintColor = isDarkMode ? Colors.white70 : AppColors.profilesetting;
@@ -103,8 +130,7 @@ class _UplaodEventAdminState extends State<UplaodEventAdmin>
         child: Column(
           children: [
             const Gap(31),
-
-            // ── Question Label ──
+            // UI Code same rakha hai
             Padding(
               padding: const EdgeInsets.only(right: 320),
               child: Text(
@@ -119,28 +145,23 @@ class _UplaodEventAdminState extends State<UplaodEventAdmin>
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: TextField(
+                controller: questionController,
                 style: TextStyle(color: textColor),
                 decoration: InputDecoration(
                   hintText: "Made in Melanin! Black History Month Social,",
-                  hintStyle: TextStyle(
-                    fontWeight: FontWeight.w400,
-                    fontSize: 14,
-                    color: hintColor,
-                  ),
+                  hintStyle: TextStyle(color: hintColor),
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(11),
                     borderSide: BorderSide(color: borderColor),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(11),
-                    borderSide: BorderSide(color: borderColor, width: 2),
+                    borderSide: BorderSide(color: borderColor, width: 1.0),
                   ),
                 ),
               ),
             ),
             const Gap(24),
-
-            // ── Options Label ──
             Padding(
               padding: const EdgeInsets.only(right: 320),
               child: Text(
@@ -155,21 +176,17 @@ class _UplaodEventAdminState extends State<UplaodEventAdmin>
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: TextField(
+                controller: option1Controller,
                 style: TextStyle(color: textColor),
                 decoration: InputDecoration(
                   hintText: "Option 1",
-                  hintStyle: TextStyle(
-                    fontWeight: FontWeight.w400,
-                    fontSize: 14,
-                    color: hintColor,
-                  ),
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(11),
                     borderSide: BorderSide(color: borderColor),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(11),
-                    borderSide: BorderSide(color: borderColor, width: 2),
+                    borderSide: BorderSide(color: borderColor, width: 1.0),
                   ),
                 ),
               ),
@@ -178,28 +195,22 @@ class _UplaodEventAdminState extends State<UplaodEventAdmin>
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: TextField(
+                controller: option2Controller,
                 style: TextStyle(color: textColor),
                 decoration: InputDecoration(
                   hintText: "Option 2",
-                  hintStyle: TextStyle(
-                    fontWeight: FontWeight.w400,
-                    fontSize: 14,
-                    color: hintColor,
-                  ),
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(11),
                     borderSide: BorderSide(color: borderColor),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(11),
-                    borderSide: BorderSide(color: borderColor, width: 2),
+                    borderSide: BorderSide(color: borderColor, width: 1.0),
                   ),
                 ),
               ),
             ),
             const Gap(24),
-
-            // ── Upload Image Label ──
             Padding(
               padding: const EdgeInsets.only(right: 275),
               child: Text(
@@ -212,170 +223,96 @@ class _UplaodEventAdminState extends State<UplaodEventAdmin>
               ),
             ),
             const Gap(6),
-
-            // ── Animated Upload Container ──
             GestureDetector(
-              onTap: _pickImage, // Click anywhere on container to upload
+              onTap: _pickImage,
               child: Padding(
                 padding: const EdgeInsets.only(right: 229),
                 child: AnimatedContainer(
                   duration: const Duration(milliseconds: 300),
-                  curve: Curves.easeInOut,
                   height: _selectedImage != null ? 160 : 127,
                   width: 154,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
                     border: Border.all(
-                      color: _uploadDone
-                          ? Colors.green
-                          : _isUploading
-                          ? AppColors.primaryColor
-                          : borderColor,
-                      width: _isUploading ? 2.5 : 1.5,
+                      color: _uploadDone ? Colors.green : borderColor,
                     ),
-                    color: _isUploading
-                        ? AppColors.primaryColor.withOpacity(0.05)
-                        : Colors.transparent,
                   ),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(9),
-                    child: _isUploading
-                        // ── Loading State ──
-                        ? Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              SizedBox(
-                                height: 32,
-                                width: 32,
-                                child: CircularProgressIndicator(
-                                  color: AppColors.primaryColor,
-                                  strokeWidth: 2.5,
-                                ),
-                              ),
-                              const Gap(8),
-                              Text(
-                                "Uploading...",
-                                style: GoogleFonts.poppins(
-                                  fontSize: 12,
-                                  color: AppColors.primaryColor,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ],
-                          )
-                        : _selectedImage != null
-                        // ── Image Selected State (animated) ──
-                        ? ScaleTransition(
-                            scale: _scaleAnim,
-                            child: FadeTransition(
-                              opacity: _fadeAnim,
-                              child: Stack(
-                                fit: StackFit.expand,
+                  child: _isUploading
+                      ? const Center(child: CircularProgressIndicator())
+                      : (_selectedImage != null
+                            ? Image.file(_selectedImage!, fit: BoxFit.cover)
+                            : Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  Image.file(
-                                    _selectedImage!,
-                                    fit: BoxFit.cover,
+                                  Icon(
+                                    Icons.file_upload_outlined,
+                                    color: textColor,
                                   ),
-                                  // Green check overlay
-                                  Positioned(
-                                    top: 6,
-                                    right: 6,
-                                    child: Container(
-                                      padding: const EdgeInsets.all(4),
-                                      decoration: const BoxDecoration(
-                                        color: Colors.green,
-                                        shape: BoxShape.circle,
-                                      ),
-                                      child: const Icon(
-                                        Icons.check,
-                                        color: Colors.white,
-                                        size: 14,
-                                      ),
-                                    ),
-                                  ),
-                                  // Tap to change overlay
-                                  Positioned(
-                                    bottom: 0,
-                                    left: 0,
-                                    right: 0,
-                                    child: Container(
-                                      color: Colors.black45,
-                                      padding: const EdgeInsets.symmetric(
-                                        vertical: 4,
-                                      ),
-                                      child: Text(
-                                        "Tap to change",
-                                        textAlign: TextAlign.center,
-                                        style: GoogleFonts.poppins(
-                                          fontSize: 10,
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.w400,
-                                        ),
-                                      ),
+                                  const Gap(4),
+                                  Text(
+                                    "Upload",
+                                    style: TextStyle(
+                                      color: textColor,
+                                      fontSize: 12,
                                     ),
                                   ),
                                 ],
-                              ),
-                            ),
-                          )
-                        // ── Default/Idle State ──
-                        : Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              TweenAnimationBuilder<double>(
-                                tween: Tween(begin: 0.0, end: 1.0),
-                                duration: const Duration(milliseconds: 400),
-                                builder: (context, value, child) =>
-                                    Opacity(opacity: value, child: child),
-                                child: Icon(
-                                  Icons.file_upload_outlined,
-                                  color: textColor,
-                                  size: 28,
-                                ),
-                              ),
-                              Text(
-                                "Upload",
-                                style: GoogleFonts.poppins(
-                                  fontWeight: FontWeight.w400,
-                                  fontSize: 14,
-                                  color: hintColor,
-                                ),
-                              ),
-                            ],
-                          ),
-                  ),
+                              )),
                 ),
               ),
             ),
-
             const Gap(24),
-
-            // ── Vote Button ──
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8.0),
               child: SizedBox(
                 height: 56,
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () async {
+                    if (ImageUrl == null) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text("Please upload an image")),
+                      );
+                      return;
+                    }
+                    setState(() => isLoading = true);
+                    try {
+                      await VoteServices().createQuestion(
+                        VoteModel(
+                          question: questionController.text,
+                          option: [
+                            option1Controller.text,
+                            option2Controller.text,
+                          ],
+                          image: ImageUrl!,
+                        ),
+                      );
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text("Question created successfully"),
+                        ),
+                      );
+                      Navigator.pop(context);
+                    } catch (e) {
+                      ScaffoldMessenger.of(
+                        context,
+                      ).showSnackBar(SnackBar(content: Text(e.toString())));
+                    } finally {
+                      setState(() => isLoading = false);
+                    }
+                  },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.primaryColor,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(11),
-                    ),
                   ),
-                  child: Text(
-                    "Vote",
-                    style: GoogleFonts.poppins(
-                      fontWeight: FontWeight.w600,
-                      fontSize: 18,
-                      color: AppColors.whiteColor,
-                    ),
-                  ),
+                  child: isLoading
+                      ? const CircularProgressIndicator(color: Colors.white)
+                      : const Text(
+                          "Vote",
+                          style: TextStyle(color: Colors.white),
+                        ),
                 ),
               ),
             ),
-            const Gap(20),
           ],
         ),
       ),

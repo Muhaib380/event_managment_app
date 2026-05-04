@@ -3,6 +3,8 @@ import 'package:event_managment_app/presentation/constants/assets_constants.dart
 import 'package:event_managment_app/presentation/views/Group_profile/group_profile.dart';
 import 'package:event_managment_app/presentation/views/admin/Events/create_events.dart';
 import 'package:event_managment_app/presentation/views/admin/Events/upload_events.dart';
+import 'package:event_managment_app/infrastructure/services/vote.dart';
+import 'package:event_managment_app/infrastructure/models/vote.dart';
 import 'package:event_managment_app/presentation/views/admin/GroupProfile.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
@@ -16,9 +18,15 @@ class CommunityAdmin extends StatefulWidget {
 }
 
 class _CommunityAdminState extends State<CommunityAdmin> {
+  final Map<String, int> selectedOptions = {};
+
   @override
   Widget build(BuildContext context) {
     bool isDark = Theme.of(context).brightness == Brightness.dark;
+
+    final size = MediaQuery.of(context).size;
+    final sw = size.width;
+    final sh = size.height;
 
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
@@ -38,19 +46,23 @@ class _CommunityAdminState extends State<CommunityAdmin> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(Icons.how_to_vote, color: AppColors.whiteColor, size: 20),
+                Icon(
+                  Icons.how_to_vote,
+                  color: AppColors.whiteColor,
+                  size: sw * 0.05,
+                ),
                 Text(
                   "Vote",
                   style: GoogleFonts.poppins(
                     fontWeight: FontWeight.w500,
-                    fontSize: 14,
+                    fontSize: sw * 0.030,
                     color: AppColors.whiteColor,
                   ),
                 ),
               ],
             ),
           ),
-          Gap(16),
+          Gap(sh * 0.02),
           FloatingActionButton(
             onPressed: () {
               Navigator.push(
@@ -63,12 +75,12 @@ class _CommunityAdminState extends State<CommunityAdmin> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(Icons.add, color: AppColors.whiteColor, size: 20),
+                Icon(Icons.add, color: AppColors.whiteColor, size: sw * 0.05),
                 Text(
-                  "Evets",
+                  "Events",
                   style: GoogleFonts.poppins(
                     fontWeight: FontWeight.w500,
-                    fontSize: 14,
+                    fontSize: sw * 0.030,
                     color: AppColors.whiteColor,
                   ),
                 ),
@@ -78,47 +90,84 @@ class _CommunityAdminState extends State<CommunityAdmin> {
         ],
       ),
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              Container(
-                color: AppColors.primaryColor,
-                child: ListTile(
-                  leading: Image.asset(
-                    AssetsConstants.Ellipse,
-                    width: 54,
-                    height: 54,
-                  ),
-                  title: Text(
-                    "Business group",
-                    style: GoogleFonts.poppins(
-                      fontWeight: FontWeight.w600,
-                      fontSize: 18,
-                      color: Colors.white,
-                    ),
-                  ),
-                  trailing: const Icon(
-                    Icons.more_vert_outlined,
+        child: Column(
+          children: [
+            Container(
+              color: AppColors.primaryColor,
+              child: ListTile(
+                leading: Image.asset(
+                  AssetsConstants.Ellipse,
+                  width: sw * 0.13,
+                  height: sw * 0.13,
+                ),
+                title: Text(
+                  "Business group",
+                  style: GoogleFonts.poppins(
+                    fontWeight: FontWeight.w600,
+                    fontSize: sw * 0.045,
                     color: Colors.white,
                   ),
                 ),
+                trailing: Icon(
+                  Icons.more_vert_outlined,
+                  color: Colors.white,
+                  size: sw * 0.06,
+                ),
               ),
-              const Gap(30),
-              _buildEventCard(context),
-              const Gap(16),
-              _buildEventCard(context),
-            ],
-          ),
+            ),
+            Expanded(
+              child: StreamBuilder<List<VoteModel>>(
+                stream: VoteServices().getQuestions(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+
+                  if (snapshot.hasError) {
+                    return Center(child: Text("Error: ${snapshot.error}"));
+                  }
+
+                  final votes = snapshot.data;
+                  if (votes == null || votes.isEmpty) {
+                    return const Center(child: Text("No votes available"));
+                  }
+
+                  return ListView.separated(
+                    padding: EdgeInsets.symmetric(vertical: sh * 0.03),
+                    itemCount: votes.length,
+                    separatorBuilder: (context, index) => Gap(sh * 0.02),
+                    itemBuilder: (context, index) {
+                      return _buildEventCard(
+                        context,
+                        votes[index],
+                        index,
+                        sw,
+                        sh,
+                      );
+                    },
+                  );
+                },
+              ),
+            ),
+          ],
         ),
       ),
     );
   }
 
-  Widget _buildEventCard(BuildContext context) {
+  Widget _buildEventCard(
+    BuildContext context,
+    VoteModel vote,
+    int index,
+    double sw,
+    double sh,
+  ) {
     bool isDark = Theme.of(context).brightness == Brightness.dark;
+    final selectedIndex = selectedOptions[vote.docId] ?? -1;
 
     return Container(
-      width: 394,
+      width: double.infinity,
+      margin: EdgeInsets.symmetric(horizontal: sw * 0.03),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12),
         color: isDark ? Colors.black : Colors.white,
@@ -132,11 +181,6 @@ class _CommunityAdminState extends State<CommunityAdmin> {
           ClipRRect(
             borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
             child: InkWell(
-              child: Image.asset(
-                AssetsConstants.blackday,
-                width: double.infinity,
-                fit: BoxFit.cover,
-              ),
               onTap: () {
                 Navigator.push(
                   context,
@@ -145,50 +189,84 @@ class _CommunityAdminState extends State<CommunityAdmin> {
                   ),
                 );
               },
+              child: vote.image != null && vote.image!.isNotEmpty
+                  ? Image.network(
+                      vote.image!,
+                      width: double.infinity,
+                      height: sh * 0.22,
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) => Container(
+                        height: sh * 0.22,
+                        color: Colors.grey[300],
+                        child: const Center(child: Icon(Icons.broken_image)),
+                      ),
+                      loadingBuilder: (context, child, loadingProgress) {
+                        if (loadingProgress == null) return child;
+                        return SizedBox(
+                          height: sh * 0.22,
+                          child: const Center(
+                            child: CircularProgressIndicator(),
+                          ),
+                        );
+                      },
+                    )
+                  : Container(
+                      height: sh * 0.22,
+                      color: Colors.grey[300],
+                      child: const Center(
+                        child: Icon(Icons.image_not_supported),
+                      ),
+                    ),
             ),
           ),
-          const Gap(10),
+          Gap(sh * 0.012),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12.0),
+            padding: EdgeInsets.symmetric(horizontal: sw * 0.03),
             child: Text(
-              "Made in Melanin! Black History Month Social",
+              vote.question ?? "Untitled vote",
               style: GoogleFonts.poppins(
                 fontWeight: FontWeight.w600,
-                fontSize: 16,
+                fontSize: sw * 0.04,
                 color: isDark ? Colors.white : Colors.black,
               ),
             ),
           ),
-          const Gap(12),
-
+          Gap(sh * 0.015),
           _buildOption(
             context,
             "A.",
-            "Made in Melanin! Black History Month Social",
-            "12k Votes",
-            true,
+            vote.option != null && vote.option!.isNotEmpty
+                ? vote.option![0]
+                : "Option A",
+            "0 Votes",
+            selectedIndex == 0,
+            () => _onOptionSelected(vote.docId, 0),
+            sw,
+            sh,
           ),
-
-          const Gap(10),
-
+          Gap(sh * 0.012),
           _buildOption(
             context,
             "B.",
-            "Made in Melanin! Black History Month Social",
-            "12k Votes",
-            false,
+            vote.option != null && vote.option!.length > 1
+                ? vote.option![1]
+                : "Option B",
+            "0 Votes",
+            selectedIndex == 1,
+            () => _onOptionSelected(vote.docId, 1),
+            sw,
+            sh,
           ),
-
           Padding(
-            padding: const EdgeInsets.all(12.0),
+            padding: EdgeInsets.all(sw * 0.03),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 Text(
-                  "12hr ago",
+                  "Just now",
                   style: GoogleFonts.poppins(
                     fontWeight: FontWeight.w400,
-                    fontSize: 12,
+                    fontSize: sw * 0.03,
                     color: Theme.of(context).textTheme.bodySmall?.color,
                   ),
                 ),
@@ -200,63 +278,76 @@ class _CommunityAdminState extends State<CommunityAdmin> {
     );
   }
 
+  void _onOptionSelected(String? voteId, int optionIndex) {
+    if (voteId == null) return;
+    setState(() {
+      selectedOptions[voteId] = optionIndex;
+    });
+  }
+
   Widget _buildOption(
     BuildContext context,
     String label,
     String text,
     String votes,
     bool isChecked,
+    VoidCallback onTap,
+    double sw,
+    double sh,
   ) {
     bool isDark = Theme.of(context).brightness == Brightness.dark;
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 12.0),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            label,
-            style: GoogleFonts.poppins(
-              fontWeight: FontWeight.w500,
-              fontSize: 14,
-              color: Theme.of(context).textTheme.bodyLarge?.color,
+    return InkWell(
+      onTap: onTap,
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: sw * 0.03),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              label,
+              style: GoogleFonts.poppins(
+                fontWeight: FontWeight.w500,
+                fontSize: sw * 0.035,
+                color: Theme.of(context).textTheme.bodyLarge?.color,
+              ),
             ),
-          ),
-          const Gap(8),
-          Icon(
-            isChecked
-                ? Icons.radio_button_checked_outlined
-                : Icons.radio_button_off,
-            color: isChecked
-                ? AppColors.primaryColor
-                : Theme.of(context).iconTheme.color,
-            size: 20,
-          ),
-          const Gap(8),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  text,
-                  style: GoogleFonts.poppins(
-                    fontWeight: FontWeight.w400,
-                    fontSize: 13,
-                    color: isDark ? Colors.white : Colors.black,
-                  ),
-                ),
-                Text(
-                  votes,
-                  style: GoogleFonts.poppins(
-                    fontWeight: FontWeight.w400,
-                    fontSize: 10,
-                    color: Theme.of(context).textTheme.bodySmall?.color,
-                  ),
-                ),
-              ],
+            Gap(sw * 0.02),
+            Icon(
+              isChecked
+                  ? Icons.radio_button_checked_outlined
+                  : Icons.radio_button_off,
+              color: isChecked
+                  ? AppColors.primaryColor
+                  : Theme.of(context).iconTheme.color,
+              size: sw * 0.05,
             ),
-          ),
-        ],
+            Gap(sw * 0.02),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    text,
+                    style: GoogleFonts.poppins(
+                      fontWeight: FontWeight.w400,
+                      fontSize: sw * 0.033,
+                      color: isDark ? Colors.white : Colors.black,
+                    ),
+                  ),
+                  Text(
+                    votes,
+                    style: GoogleFonts.poppins(
+                      fontWeight: FontWeight.w400,
+                      fontSize: sw * 0.025,
+                      color: Theme.of(context).textTheme.bodySmall?.color,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

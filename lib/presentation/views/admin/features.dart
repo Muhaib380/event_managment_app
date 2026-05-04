@@ -27,35 +27,45 @@ class _FeaturesAdminState extends State<FeaturesAdmin> {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
+    // ✅ Responsive helpers
+    final size = MediaQuery.of(context).size;
+    final sw = size.width;
+    final sh = size.height;
+
     return SafeArea(
       child: Scaffold(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         body: SingleChildScrollView(
           child: Column(
             children: [
-              const Gap(29.38),
+              Gap(sh * 0.035), // ✅ was Gap(29.38)
+
               Row(
                 children: [
                   Padding(
-                    padding: const EdgeInsets.only(left: 20),
+                    padding: EdgeInsets.only(left: sw * 0.05), // ✅ was left: 20
                     child: Text(
                       "Features",
                       style: GoogleFonts.poppins(
                         fontWeight: FontWeight.w600,
-                        fontSize: 18,
+                        fontSize: sw * 0.045, // ✅ was 18
                         color: isDark ? Colors.white : Colors.black,
                       ),
                     ),
                   ),
-                  const Gap(257),
-                  Image.asset(
-                    AssetsConstants.feature_icon,
-                    height: 42,
-                    width: 42,
+                  const Spacer(), // ✅ was Gap(257) — Spacer responsive hai
+                  Padding(
+                    padding: EdgeInsets.only(right: sw * 0.04),
+                    child: Image.asset(
+                      AssetsConstants.feature_icon,
+                      height: sw * 0.1, // ✅ was 42
+                      width: sw * 0.1,
+                    ),
                   ),
                 ],
               ),
-              const Gap(22),
+
+              Gap(sh * 0.025), // ✅ was Gap(22)
 
               StreamBuilder<List<EventModel>>(
                 stream: EventServices().getEvent(),
@@ -64,7 +74,12 @@ class _FeaturesAdminState extends State<FeaturesAdmin> {
                     return const Center(child: CircularProgressIndicator());
                   }
                   if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                    return const Center(child: Text("No events found"));
+                    return Center(
+                      child: Text(
+                        "No events found",
+                        style: GoogleFonts.poppins(fontSize: sw * 0.035),
+                      ),
+                    );
                   }
 
                   List<EventModel> events = snapshot.data!;
@@ -84,7 +99,7 @@ class _FeaturesAdminState extends State<FeaturesAdmin> {
                           Card(
                             color: isDark ? Colors.black : Colors.white,
                             child: Container(
-                              width: 392,
+                              width: double.infinity, // ✅ was hardcoded 392
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(12),
                                 border: Border.all(
@@ -94,7 +109,7 @@ class _FeaturesAdminState extends State<FeaturesAdmin> {
                                 ),
                               ),
                               child: Padding(
-                                padding: const EdgeInsets.all(8.0),
+                                padding: EdgeInsets.all(sw * 0.02), // ✅ was 8.0
                                 child: Column(
                                   children: [
                                     Stack(
@@ -108,8 +123,9 @@ class _FeaturesAdminState extends State<FeaturesAdmin> {
                                                   event.image!.isNotEmpty
                                               ? Image.network(
                                                   event.image!,
-                                                  width: 368,
-                                                  height: 210,
+                                                  width: sw * 0.9, // ✅ was 368
+                                                  height:
+                                                      sh * 0.25, // ✅ was 210
                                                   fit: BoxFit.cover,
                                                   errorBuilder:
                                                       (
@@ -120,22 +136,22 @@ class _FeaturesAdminState extends State<FeaturesAdmin> {
                                                         return Image.asset(
                                                           AssetsConstants
                                                               .blackday,
-                                                          width: 368,
-                                                          height: 210,
+                                                          width: sw * 0.9,
+                                                          height: sh * 0.25,
                                                           fit: BoxFit.cover,
                                                         );
                                                       },
                                                 )
                                               : Image.asset(
                                                   AssetsConstants.blackday,
-                                                  width: 368,
-                                                  height: 210,
+                                                  width: sw * 0.9,
+                                                  height: sh * 0.25,
                                                   fit: BoxFit.cover,
                                                 ),
                                         ),
                                         Positioned(
-                                          top: 10,
-                                          right: 10,
+                                          top: sw * 0.025, // ✅ was 10
+                                          right: sw * 0.025,
                                           child: GestureDetector(
                                             onTap: () {
                                               widget.onFavoriteChanged(
@@ -152,16 +168,16 @@ class _FeaturesAdminState extends State<FeaturesAdmin> {
                                                   : (isDark
                                                         ? Colors.white70
                                                         : Colors.grey),
-                                              size: 20,
+                                              size: sw * 0.055, // ✅ was 20
                                             ),
                                           ),
                                         ),
                                       ],
                                     ),
-                                    const Gap(10),
+                                    Gap(sh * 0.012), // ✅ was Gap(10)
                                     Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                        horizontal: 8,
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: sw * 0.02,
                                       ),
                                       child: Align(
                                         alignment: Alignment.centerLeft,
@@ -169,7 +185,7 @@ class _FeaturesAdminState extends State<FeaturesAdmin> {
                                           event.title ?? '',
                                           style: GoogleFonts.poppins(
                                             fontWeight: FontWeight.w600,
-                                            fontSize: 16,
+                                            fontSize: sw * 0.04, // ✅ was 16
                                             color: isDark
                                                 ? Colors.white
                                                 : Colors.black,
@@ -177,13 +193,13 @@ class _FeaturesAdminState extends State<FeaturesAdmin> {
                                         ),
                                       ),
                                     ),
-                                    const Gap(10),
+                                    Gap(sh * 0.012),
                                     ListTile(
                                       leading: ImageIcon(
                                         const AssetImage(
                                           AssetsConstants.icon_calendar,
                                         ),
-                                        size: 18,
+                                        size: sw * 0.045, // ✅ was 18
                                         color: isDark
                                             ? Colors.white
                                             : Colors.black,
@@ -192,7 +208,7 @@ class _FeaturesAdminState extends State<FeaturesAdmin> {
                                         event.dateTime.toString(),
                                         style: GoogleFonts.poppins(
                                           fontWeight: FontWeight.w300,
-                                          fontSize: 14,
+                                          fontSize: sw * 0.032, // ✅ was 14
                                           color: isDark
                                               ? Colors.white
                                               : Colors.black,
@@ -204,7 +220,7 @@ class _FeaturesAdminState extends State<FeaturesAdmin> {
                                         const AssetImage(
                                           AssetsConstants.icon_location,
                                         ),
-                                        size: 18,
+                                        size: sw * 0.045,
                                         color: isDark
                                             ? Colors.white
                                             : Colors.black,
@@ -213,16 +229,17 @@ class _FeaturesAdminState extends State<FeaturesAdmin> {
                                         event.location ?? "",
                                         style: GoogleFonts.poppins(
                                           fontWeight: FontWeight.w300,
-                                          fontSize: 14,
+                                          fontSize: sw * 0.032,
                                           color: isDark
                                               ? Colors.white
                                               : Colors.black,
                                         ),
                                       ),
                                     ),
+                                    // ── Add to Calendar Button ──────────
                                     SizedBox(
-                                      width: 368,
-                                      height: 48,
+                                      width: double.infinity, // ✅ was 368
+                                      height: sh * 0.06, // ✅ was 48
                                       child: ElevatedButton(
                                         onPressed: () {
                                           Navigator.push(
@@ -246,7 +263,7 @@ class _FeaturesAdminState extends State<FeaturesAdmin> {
                                           "Add to my calendar",
                                           style: GoogleFonts.poppins(
                                             fontWeight: FontWeight.w600,
-                                            fontSize: 16,
+                                            fontSize: sw * 0.038, // ✅ was 16
                                             color: Colors.white,
                                           ),
                                         ),
@@ -257,7 +274,7 @@ class _FeaturesAdminState extends State<FeaturesAdmin> {
                               ),
                             ),
                           ),
-                          const Gap(24),
+                          Gap(sh * 0.03), // ✅ was Gap(24)
                         ],
                       );
                     },
