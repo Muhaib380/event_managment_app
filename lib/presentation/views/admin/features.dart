@@ -38,34 +38,34 @@ class _FeaturesAdminState extends State<FeaturesAdmin> {
         body: SingleChildScrollView(
           child: Column(
             children: [
-              Gap(sh * 0.035), // ✅ was Gap(29.38)
+              Gap(sh * 0.035),
 
               Row(
                 children: [
                   Padding(
-                    padding: EdgeInsets.only(left: sw * 0.05), // ✅ was left: 20
+                    padding: EdgeInsets.only(left: sw * 0.05),
                     child: Text(
                       "Features",
                       style: GoogleFonts.poppins(
                         fontWeight: FontWeight.w600,
-                        fontSize: sw * 0.045, // ✅ was 18
+                        fontSize: sw * 0.045,
                         color: isDark ? Colors.white : Colors.black,
                       ),
                     ),
                   ),
-                  const Spacer(), // ✅ was Gap(257) — Spacer responsive hai
+                  const Spacer(),
                   Padding(
                     padding: EdgeInsets.only(right: sw * 0.04),
                     child: Image.asset(
                       AssetsConstants.feature_icon,
-                      height: sw * 0.1, // ✅ was 42
+                      height: sw * 0.1,
                       width: sw * 0.1,
                     ),
                   ),
                 ],
               ),
 
-              Gap(sh * 0.025), // ✅ was Gap(22)
+              Gap(sh * 0.025),
 
               StreamBuilder<List<EventModel>>(
                 stream: EventServices().getEvent(),
@@ -99,7 +99,7 @@ class _FeaturesAdminState extends State<FeaturesAdmin> {
                           Card(
                             color: isDark ? Colors.black : Colors.white,
                             child: Container(
-                              width: double.infinity, // ✅ was hardcoded 392
+                              width: double.infinity,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(12),
                                 border: Border.all(
@@ -109,38 +109,32 @@ class _FeaturesAdminState extends State<FeaturesAdmin> {
                                 ),
                               ),
                               child: Padding(
-                                padding: EdgeInsets.all(sw * 0.02), // ✅ was 8.0
+                                padding: EdgeInsets.all(sw * 0.02),
                                 child: Column(
                                   children: [
                                     Stack(
                                       children: [
                                         ClipRRect(
-                                          borderRadius: BorderRadius.circular(
-                                            10,
-                                          ),
-                                          child:
-                                              event.image != null &&
+                                          borderRadius: BorderRadius.circular(10),
+                                          child: event.image != null &&
                                                   event.image!.isNotEmpty
                                               ? Image.network(
                                                   event.image!,
-                                                  width: sw * 0.9, // ✅ was 368
-                                                  height:
-                                                      sh * 0.25, // ✅ was 210
+                                                  width: sw * 0.9,
+                                                  height: sh * 0.25,
                                                   fit: BoxFit.cover,
-                                                  errorBuilder:
-                                                      (
-                                                        context,
-                                                        error,
-                                                        stackTrace,
-                                                      ) {
-                                                        return Image.asset(
-                                                          AssetsConstants
-                                                              .blackday,
-                                                          width: sw * 0.9,
-                                                          height: sh * 0.25,
-                                                          fit: BoxFit.cover,
-                                                        );
-                                                      },
+                                                  errorBuilder: (
+                                                    context,
+                                                    error,
+                                                    stackTrace,
+                                                  ) {
+                                                    return Image.asset(
+                                                      AssetsConstants.blackday,
+                                                      width: sw * 0.9,
+                                                      height: sh * 0.25,
+                                                      fit: BoxFit.cover,
+                                                    );
+                                                  },
                                                 )
                                               : Image.asset(
                                                   AssetsConstants.blackday,
@@ -150,7 +144,7 @@ class _FeaturesAdminState extends State<FeaturesAdmin> {
                                                 ),
                                         ),
                                         Positioned(
-                                          top: sw * 0.025, // ✅ was 10
+                                          top: sw * 0.025,
                                           right: sw * 0.025,
                                           child: GestureDetector(
                                             onTap: () {
@@ -168,13 +162,13 @@ class _FeaturesAdminState extends State<FeaturesAdmin> {
                                                   : (isDark
                                                         ? Colors.white70
                                                         : Colors.grey),
-                                              size: sw * 0.055, // ✅ was 20
+                                              size: sw * 0.055,
                                             ),
                                           ),
                                         ),
                                       ],
                                     ),
-                                    Gap(sh * 0.012), // ✅ was Gap(10)
+                                    Gap(sh * 0.012),
                                     Padding(
                                       padding: EdgeInsets.symmetric(
                                         horizontal: sw * 0.02,
@@ -185,7 +179,7 @@ class _FeaturesAdminState extends State<FeaturesAdmin> {
                                           event.title ?? '',
                                           style: GoogleFonts.poppins(
                                             fontWeight: FontWeight.w600,
-                                            fontSize: sw * 0.04, // ✅ was 16
+                                            fontSize: sw * 0.04,
                                             color: isDark
                                                 ? Colors.white
                                                 : Colors.black,
@@ -199,7 +193,7 @@ class _FeaturesAdminState extends State<FeaturesAdmin> {
                                         const AssetImage(
                                           AssetsConstants.icon_calendar,
                                         ),
-                                        size: sw * 0.045, // ✅ was 18
+                                        size: sw * 0.045,
                                         color: isDark
                                             ? Colors.white
                                             : Colors.black,
@@ -208,7 +202,7 @@ class _FeaturesAdminState extends State<FeaturesAdmin> {
                                         event.dateTime.toString(),
                                         style: GoogleFonts.poppins(
                                           fontWeight: FontWeight.w300,
-                                          fontSize: sw * 0.032, // ✅ was 14
+                                          fontSize: sw * 0.032,
                                           color: isDark
                                               ? Colors.white
                                               : Colors.black,
@@ -238,15 +232,18 @@ class _FeaturesAdminState extends State<FeaturesAdmin> {
                                     ),
                                     // ── Add to Calendar Button ──────────
                                     SizedBox(
-                                      width: double.infinity, // ✅ was 368
-                                      height: sh * 0.06, // ✅ was 48
+                                      width: double.infinity,
+                                      height: sh * 0.06,
                                       child: ElevatedButton(
                                         onPressed: () {
+                                          // ✅ Ab specific event pass ho raha hai
                                           Navigator.push(
                                             context,
                                             MaterialPageRoute(
                                               builder: (context) =>
-                                                  EventsPageAdmin(),
+                                                  EventsPageAdmin(
+                                                event: event, // ✅ EVENT PASS
+                                              ),
                                             ),
                                           );
                                         },
@@ -263,7 +260,7 @@ class _FeaturesAdminState extends State<FeaturesAdmin> {
                                           "Add to my calendar",
                                           style: GoogleFonts.poppins(
                                             fontWeight: FontWeight.w600,
-                                            fontSize: sw * 0.038, // ✅ was 16
+                                            fontSize: sw * 0.038,
                                             color: Colors.white,
                                           ),
                                         ),
@@ -274,7 +271,7 @@ class _FeaturesAdminState extends State<FeaturesAdmin> {
                               ),
                             ),
                           ),
-                          Gap(sh * 0.03), // ✅ was Gap(24)
+                          Gap(sh * 0.03),
                         ],
                       );
                     },

@@ -30,10 +30,16 @@ class _LoginState extends State<Login> {
     var userPovider = Provider.of<UserProvider>(context);
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
+    // Responsive helpers
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+    final hPad = screenWidth * 0.05; // 5% horizontal padding
+
     return Scaffold(
       backgroundColor: isDark ? const Color(0xFF121212) : Colors.white,
       body: SingleChildScrollView(
         child: Container(
+          width: screenWidth,
           decoration: BoxDecoration(
             image: const DecorationImage(
               image: AssetImage("assets/images/walkingthrough_bck.png"),
@@ -41,11 +47,13 @@ class _LoginState extends State<Login> {
             ),
           ),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Gap(52.38),
+              Gap(screenHeight * 0.065),
 
+              // ── Title Row ──
               Padding(
-                padding: const EdgeInsets.only(left: 20),
+                padding: EdgeInsets.only(left: hPad),
                 child: Row(
                   children: [
                     Text(
@@ -69,10 +77,11 @@ class _LoginState extends State<Login> {
                 ),
               ),
 
+              // ── Subtitle ──
               Padding(
-                padding: const EdgeInsets.only(right: 127),
+                padding: EdgeInsets.symmetric(horizontal: hPad),
                 child: Text(
-                  "Enter given detail to login to your ",
+                  "Enter given detail to login to your account",
                   style: GoogleFonts.poppins(
                     fontWeight: FontWeight.w400,
                     color: isDark ? Colors.white : AppColors.blackColor,
@@ -80,21 +89,11 @@ class _LoginState extends State<Login> {
                 ),
               ),
 
-              Padding(
-                padding: const EdgeInsets.only(right: 315),
-                child: Text(
-                  " account",
-                  style: GoogleFonts.poppins(
-                    fontWeight: FontWeight.w400,
-                    color: isDark ? Colors.white : AppColors.blackColor,
-                  ),
-                ),
-              ),
+              Gap(screenHeight * 0.13),
 
-              const Gap(114),
-
+              // ── Phone/Email Label ──
               Padding(
-                padding: const EdgeInsets.only(right: 270),
+                padding: EdgeInsets.symmetric(horizontal: hPad),
                 child: Text(
                   "Phone number",
                   style: GoogleFonts.poppins(
@@ -105,8 +104,9 @@ class _LoginState extends State<Login> {
                 ),
               ),
 
+              // ── Email Field ──
               Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: EdgeInsets.symmetric(horizontal: hPad, vertical: 8),
                 child: TextField(
                   controller: emailController,
                   style: TextStyle(color: isDark ? Colors.white : Colors.black),
@@ -128,8 +128,9 @@ class _LoginState extends State<Login> {
 
               const Gap(16),
 
+              // ── Password Label ──
               Padding(
-                padding: const EdgeInsets.only(right: 316),
+                padding: EdgeInsets.symmetric(horizontal: hPad),
                 child: Text(
                   "Password",
                   style: GoogleFonts.poppins(
@@ -140,8 +141,9 @@ class _LoginState extends State<Login> {
                 ),
               ),
 
+              // ── Password Field ──
               Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: EdgeInsets.symmetric(horizontal: hPad, vertical: 8),
                 child: TextField(
                   controller: passwordController,
                   obscureText: _isObscure,
@@ -173,167 +175,189 @@ class _LoginState extends State<Login> {
                 ),
               ),
 
-              Padding(
-                padding: const EdgeInsets.only(left: 230),
-                child: TextButton(
-                  onPressed: () {},
-                  child: Text(
-                    "Forgot Password?",
-                    style: GoogleFonts.poppins(
-                      fontWeight: FontWeight.w600,
-                      fontSize: 16,
-                      color: isDark ? Colors.white : AppColors.blackColor,
+              // ── Forgot Password ──
+              Align(
+                alignment: Alignment.centerRight,
+                child: Padding(
+                  padding: EdgeInsets.only(right: hPad),
+                  child: TextButton(
+                    onPressed: () {},
+                    child: Text(
+                      "Forgot Password?",
+                      style: GoogleFonts.poppins(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 16,
+                        color: isDark ? Colors.white : AppColors.blackColor,
+                      ),
                     ),
                   ),
                 ),
               ),
 
               const Gap(33),
-              SizedBox(
-                height: 56,
-                width: 392,
-                child: isLoading
-                    ? Center(child: CircularProgressIndicator())
-                    : ElevatedButton(
-                        onPressed: () async {
-                          if (emailController.text.isEmpty ||
-                              passwordController.text.isEmpty) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text("Fill all fields")),
-                            );
-                            return;
-                          }
-                          try {
-                            isLoading = true;
-                            setState(() {});
-                            await AuthServices()
-                                .loginUser(
-                                  email: emailController.text,
-                                  password: passwordController.text,
-                                )
-                                .then((val) async {
-                                  isLoading = false;
-                                  setState(() {});
-                                  await UserServices()
-                                      .getUserProfile(val.uid)
-                                      .then((userData) {
-                                        userPovider.setUser(userData);
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                Bottom_BarAdmin(),
-                                          ),
-                                        );
-                                      });
-                                });
-                          } catch (e) {
-                            isLoading = false;
-                            setState(() {});
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text(e.toString())),
-                            );
-                          }
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: AppColors.primaryColor,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
+
+              // ── Login Button ──
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: hPad),
+                child: SizedBox(
+                  height: 56,
+                  width: double.infinity,
+                  child: isLoading
+                      ? const Center(child: CircularProgressIndicator())
+                      : ElevatedButton(
+                          onPressed: () async {
+                            if (emailController.text.isEmpty ||
+                                passwordController.text.isEmpty) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text("Fill all fields"),
+                                ),
+                              );
+                              return;
+                            }
+                            try {
+                              isLoading = true;
+                              setState(() {});
+                              await AuthServices()
+                                  .loginUser(
+                                    email: emailController.text,
+                                    password: passwordController.text,
+                                  )
+                                  .then((val) async {
+                                    isLoading = false;
+                                    setState(() {});
+                                    await UserServices()
+                                        .getUserProfile(val.uid)
+                                        .then((userData) {
+                                          userPovider.setUser(userData);
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  Bottom_BarAdmin(),
+                                            ),
+                                          );
+                                        });
+                                  });
+                            } catch (e) {
+                              isLoading = false;
+                              setState(() {});
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text(e.toString())),
+                              );
+                            }
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColors.primaryColor,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
+                          child: Text(
+                            "Login",
+                            style: GoogleFonts.poppins(
+                              fontWeight: FontWeight.w600,
+                              fontSize: 16,
+                              color: AppColors.whiteColor,
+                            ),
                           ),
                         ),
-                        child: Text(
-                          "Login",
-                          style: GoogleFonts.poppins(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 16,
-                            color: AppColors.whiteColor,
-                          ),
-                        ),
-                      ),
+                ),
               ),
 
               const Gap(62),
 
-              Text(
-                "OR",
-                style: GoogleFonts.poppins(
-                  fontWeight: FontWeight.w600,
-                  fontSize: 16,
-                  color: isDark ? Colors.white : AppColors.blackColor,
+              // ── OR Divider ──
+              Center(
+                child: Text(
+                  "OR",
+                  style: GoogleFonts.poppins(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 16,
+                    color: isDark ? Colors.white : AppColors.blackColor,
+                  ),
                 ),
               ),
 
               const Gap(43),
 
-              SizedBox(
-                width: 392,
-                height: 56,
-                child: ElevatedButton(
-                  onPressed: () {},
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: isDark
-                        ? const Color(0xFF1E1E1E)
-                        : AppColors.whiteColor,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
+              // ── Google Button ──
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: hPad),
+                child: SizedBox(
+                  width: double.infinity,
+                  height: 56,
+                  child: ElevatedButton(
+                    onPressed: () {},
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: isDark
+                          ? const Color(0xFF1E1E1E)
+                          : AppColors.whiteColor,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
                     ),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Image.asset(
-                        AssetsConstants.icongoogle,
-                        height: 36,
-                        width: 36,
-                      ),
-                      const SizedBox(width: 61),
-                      Text(
-                        "Continue with google",
-                        style: GoogleFonts.poppins(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 14,
-                          color: isDark
-                              ? Colors.white
-                              : AppColors.gotamblackColor,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Image.asset(
+                          AssetsConstants.icongoogle,
+                          height: 36,
+                          width: 36,
                         ),
-                      ),
-                    ],
+                        const Gap(16),
+                        Text(
+                          "Continue with google",
+                          style: GoogleFonts.poppins(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 14,
+                            color: isDark
+                                ? Colors.white
+                                : AppColors.gotamblackColor,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
 
-              const Gap(175),
+              Gap(screenHeight * 0.2),
 
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    "If you don’t have an account",
-                    style: GoogleFonts.poppins(
-                      fontWeight: FontWeight.w400,
-                      fontSize: 12,
-                      color: isDark ? Colors.white : AppColors.blackColor,
-                    ),
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => CreateAccount(),
-                        ),
-                      );
-                    },
-                    child: Text(
-                      "Create Account",
+              // ── Create Account Row ──
+              Center(
+                child: Wrap(
+                  alignment: WrapAlignment.center,
+                  crossAxisAlignment: WrapCrossAlignment.center,
+                  children: [
+                    Text(
+                      "If you don't have an account",
                       style: GoogleFonts.poppins(
                         fontWeight: FontWeight.w400,
-                        fontSize: 15,
-                        color: AppColors.primaryColor,
+                        fontSize: 12,
+                        color: isDark ? Colors.white : AppColors.blackColor,
                       ),
                     ),
-                  ),
-                ],
+                    TextButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => CreateAccount(),
+                          ),
+                        );
+                      },
+                      child: Text(
+                        "Create Account",
+                        style: GoogleFonts.poppins(
+                          fontWeight: FontWeight.w400,
+                          fontSize: 15,
+                          color: AppColors.primaryColor,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
 
               const Gap(33),

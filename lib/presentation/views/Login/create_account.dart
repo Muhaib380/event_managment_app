@@ -30,11 +30,17 @@ class _CreateAccountState extends State<CreateAccount> {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
+    // Responsive helpers
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+    final hPad = screenWidth * 0.05; // 5% horizontal padding
+
     return Scaffold(
       backgroundColor: isDark ? const Color(0xFF121212) : Colors.white,
 
       body: SingleChildScrollView(
         child: Container(
+          width: screenWidth,
           decoration: BoxDecoration(
             image: const DecorationImage(
               image: AssetImage("assets/images/walkingthrough_bck.png"),
@@ -43,11 +49,13 @@ class _CreateAccountState extends State<CreateAccount> {
           ),
 
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Gap(55),
+              Gap(screenHeight * 0.065),
 
+              // ── Title Row ──
               Padding(
-                padding: const EdgeInsets.only(left: 20),
+                padding: EdgeInsets.only(left: hPad),
                 child: Row(
                   children: [
                     Text(
@@ -71,20 +79,11 @@ class _CreateAccountState extends State<CreateAccount> {
                 ),
               ),
 
+              // ── Subtitle ──
               Padding(
-                padding: const EdgeInsets.only(right: 138),
+                padding: EdgeInsets.symmetric(horizontal: hPad),
                 child: Text(
-                  "Enter given detail to create your",
-                  style: GoogleFonts.poppins(
-                    fontWeight: FontWeight.w400,
-                    color: isDark ? Colors.white : AppColors.gotamblackColor,
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(right: 310),
-                child: Text(
-                  "account",
+                  "Enter given detail to create your account",
                   style: GoogleFonts.poppins(
                     fontWeight: FontWeight.w400,
                     color: isDark ? Colors.white : AppColors.gotamblackColor,
@@ -94,14 +93,12 @@ class _CreateAccountState extends State<CreateAccount> {
 
               const Gap(40),
 
+              // ── Email Field ──
               Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 12,
-                  vertical: 8,
-                ),
+                padding: EdgeInsets.symmetric(horizontal: hPad, vertical: 8),
                 child: TextField(
                   controller: emailController,
-                  enableSuggestions: false, // ← yeh add karo
+                  enableSuggestions: false,
                   autocorrect: false,
                   style: TextStyle(color: isDark ? Colors.white : Colors.black),
                   decoration: InputDecoration(
@@ -124,14 +121,11 @@ class _CreateAccountState extends State<CreateAccount> {
 
               const Gap(16),
 
+              // ── Password Field ──
               Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 12,
-                  vertical: 8,
-                ),
+                padding: EdgeInsets.symmetric(horizontal: hPad, vertical: 8),
                 child: TextField(
                   key: const ValueKey('password'),
-
                   controller: passwordController,
                   obscureText: _isObscurePassword,
                   enableSuggestions: false,
@@ -171,11 +165,9 @@ class _CreateAccountState extends State<CreateAccount> {
 
               const Gap(16),
 
+              // ── Confirm Password Field ──
               Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 12,
-                  vertical: 8,
-                ),
+                padding: EdgeInsets.symmetric(horizontal: hPad, vertical: 8),
                 child: TextField(
                   controller: confirmpasswordController,
                   enableSuggestions: false,
@@ -214,153 +206,174 @@ class _CreateAccountState extends State<CreateAccount> {
                   ),
                 ),
               ),
+
               const Gap(62),
-              isLoading
-                  ? Center(child: CircularProgressIndicator())
-                  : SizedBox(
-                      height: 56,
-                      width: 392,
-                      child: ElevatedButton(
-                        onPressed: () async {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => Login()),
-                          );
-                          try {
-                            isLoading = true;
-                            setState(() {});
-                            await AuthServices()
-                                .registerUser(
-                                  email: emailController.text,
-                                  password: passwordController.text,
-                                )
-                                .then((val) async {
-                                  UserServices()
-                                      .createUser(
-                                        UserModel(
-                                          docId: val.uid,
-                                          email: emailController.text,
-                                          password: passwordController.text,
-                                        ),
-                                      )
-                                      .then((value) {
-                                        isLoading = false;
-                                        setState(() {});
-                                        showDialog(
-                                          context: context,
-                                          builder: (BuildContext context) {
-                                            return AlertDialog(
-                                              content: Text(
-                                                "Register Successfully",
-                                              ),
-                                              actions: [
-                                                TextButton(
-                                                  onPressed: () {
-                                                    Navigator.pop(context);
-                                                    Navigator.pop(context);
-                                                  },
-                                                  child: Text("Okay"),
-                                                ),
-                                              ],
-                                            );
-                                          },
-                                        );
-                                      });
-                                });
-                          } catch (e) {
-                            isLoading = false;
-                            setState(() {});
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text(e.toString())),
+
+              // ── Continue Button ──
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: hPad),
+                child: isLoading
+                    ? const Center(child: CircularProgressIndicator())
+                    : SizedBox(
+                        height: 56,
+                        width: double.infinity,
+                        child: ElevatedButton(
+                          onPressed: () async {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => Login()),
                             );
-                          }
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: AppColors.primaryColor,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
+                            try {
+                              isLoading = true;
+                              setState(() {});
+                              await AuthServices()
+                                  .registerUser(
+                                    email: emailController.text,
+                                    password: passwordController.text,
+                                  )
+                                  .then((val) async {
+                                    UserServices()
+                                        .createUser(
+                                          UserModel(
+                                            docId: val.uid,
+                                            email: emailController.text,
+                                            password: passwordController.text,
+                                          ),
+                                        )
+                                        .then((value) {
+                                          isLoading = false;
+                                          setState(() {});
+                                          showDialog(
+                                            context: context,
+                                            builder: (BuildContext context) {
+                                              return AlertDialog(
+                                                content: Text(
+                                                  "Register Successfully",
+                                                ),
+                                                actions: [
+                                                  TextButton(
+                                                    onPressed: () {
+                                                      Navigator.pop(context);
+                                                      Navigator.pop(context);
+                                                    },
+                                                    child: Text("Okay"),
+                                                  ),
+                                                ],
+                                              );
+                                            },
+                                          );
+                                        });
+                                  });
+                            } catch (e) {
+                              isLoading = false;
+                              setState(() {});
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text(e.toString())),
+                              );
+                            }
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColors.primaryColor,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
                           ),
-                        ),
-                        child: Text(
-                          "Continue",
-                          style: GoogleFonts.poppins(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 16,
-                            color: AppColors.whiteColor,
+                          child: Text(
+                            "Continue",
+                            style: GoogleFonts.poppins(
+                              fontWeight: FontWeight.w600,
+                              fontSize: 16,
+                              color: AppColors.whiteColor,
+                            ),
                           ),
                         ),
                       ),
-                    ),
+              ),
+
               const Gap(36),
-              Text(
-                "OR",
-                style: GoogleFonts.poppins(
-                  fontWeight: FontWeight.w600,
-                  fontSize: 16,
-                  color: isDark ? Colors.white : AppColors.blackColor,
+
+              // ── OR Divider ──
+              Center(
+                child: Text(
+                  "OR",
+                  style: GoogleFonts.poppins(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 16,
+                    color: isDark ? Colors.white : AppColors.blackColor,
+                  ),
                 ),
               ),
+
               const Gap(52),
-              SizedBox(
-                width: 392,
-                height: 56,
-                child: ElevatedButton(
-                  onPressed: () {},
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: isDark
-                        ? const Color(0xFF1E1E1E)
-                        : Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
+
+              // ── Google Button ──
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: hPad),
+                child: SizedBox(
+                  width: double.infinity,
+                  height: 56,
+                  child: ElevatedButton(
+                    onPressed: () {},
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: isDark
+                          ? const Color(0xFF1E1E1E)
+                          : Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
                     ),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Image.asset(
-                        AssetsConstants.icongoogle,
-                        height: 36,
-                        width: 36,
-                      ),
-                      const SizedBox(width: 20),
-                      Text(
-                        "Continue with google",
-                        style: GoogleFonts.poppins(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 14,
-                          color: isDark
-                              ? Colors.white
-                              : AppColors.gotamblackColor,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Image.asset(
+                          AssetsConstants.icongoogle,
+                          height: 36,
+                          width: 36,
                         ),
-                      ),
-                    ],
+                        const Gap(16),
+                        Text(
+                          "Continue with google",
+                          style: GoogleFonts.poppins(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 14,
+                            color: isDark
+                                ? Colors.white
+                                : AppColors.gotamblackColor,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
 
               const Gap(80),
 
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    "If you don’t have an account",
-                    style: GoogleFonts.poppins(
-                      fontSize: 12,
-                      color: isDark ? Colors.white : AppColors.blackColor,
-                    ),
-                  ),
-                  TextButton(
-                    onPressed: () {},
-                    child: Text(
-                      "Login",
+              // ── Login Row ──
+              Center(
+                child: Wrap(
+                  alignment: WrapAlignment.center,
+                  crossAxisAlignment: WrapCrossAlignment.center,
+                  children: [
+                    Text(
+                      "If you don't have an account",
                       style: GoogleFonts.poppins(
-                        fontSize: 15,
-                        color: AppColors.primaryColor,
+                        fontSize: 12,
+                        color: isDark ? Colors.white : AppColors.blackColor,
                       ),
                     ),
-                  ),
-                ],
+                    TextButton(
+                      onPressed: () {},
+                      child: Text(
+                        "Login",
+                        style: GoogleFonts.poppins(
+                          fontSize: 15,
+                          color: AppColors.primaryColor,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
 
               const Gap(30),

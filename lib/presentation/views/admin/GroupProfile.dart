@@ -16,6 +16,10 @@ class _GroupProfileAdminState extends State<GroupProfileAdmin> {
   Widget build(BuildContext context) {
     bool isDark = Theme.of(context).brightness == Brightness.dark;
 
+    final screenWidth = MediaQuery.of(context).size.width;
+    final hPad = screenWidth * 0.04;
+    final cardImageHeight = screenWidth * 0.52;
+
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
@@ -33,7 +37,12 @@ class _GroupProfileAdminState extends State<GroupProfileAdmin> {
             color: Colors.white,
           ),
         ),
-        actions: const [Icon(Icons.more_vert_outlined, color: Colors.white)],
+        actions: const [
+          Padding(
+            padding: EdgeInsets.only(right: 8),
+            child: Icon(Icons.more_vert_outlined, color: Colors.white),
+          ),
+        ],
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -51,20 +60,16 @@ class _GroupProfileAdminState extends State<GroupProfileAdmin> {
               ),
             ),
             const Gap(6),
-            Text(
-              "Lorem ipsum dolor sit amet consectetur. Cras elit",
-              style: GoogleFonts.poppins(
-                fontWeight: FontWeight.w400,
-                fontSize: 14,
-                color: isDark ? Colors.white70 : AppColors.profilesetting,
-              ),
-            ),
-            Text(
-              "volutpat morbi mauris tincidunt lacus.",
-              style: GoogleFonts.poppins(
-                fontWeight: FontWeight.w400,
-                fontSize: 14,
-                color: isDark ? Colors.white70 : AppColors.profilesetting,
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: hPad),
+              child: Text(
+                "Lorem ipsum dolor sit amet consectetur. Cras elit volutpat morbi mauris tincidunt lacus.",
+                textAlign: TextAlign.center,
+                style: GoogleFonts.poppins(
+                  fontWeight: FontWeight.w400,
+                  fontSize: 14,
+                  color: isDark ? Colors.white70 : AppColors.profilesetting,
+                ),
               ),
             ),
             const Gap(12),
@@ -85,22 +90,26 @@ class _GroupProfileAdminState extends State<GroupProfileAdmin> {
             ),
             const Gap(33),
             Padding(
-              padding: const EdgeInsets.only(right: 250),
-              child: Text(
-                "Group Events",
-                style: GoogleFonts.poppins(
-                  fontWeight: FontWeight.w600,
-                  fontSize: 16,
-                  color: isDark ? Colors.white : Colors.black,
+              padding: EdgeInsets.only(left: hPad),
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  "Group Events",
+                  style: GoogleFonts.poppins(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 16,
+                    color: isDark ? Colors.white : Colors.black,
+                  ),
                 ),
               ),
             ),
             const Gap(16),
 
             // ---- Card 1 ----
-            Center(
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: hPad),
               child: Container(
-                width: 392,
+                width: double.infinity,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(12),
                   color: isDark ? Colors.black : Colors.white,
@@ -111,36 +120,30 @@ class _GroupProfileAdminState extends State<GroupProfileAdmin> {
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Image.asset(
-                        AssetsConstants.blackday,
-                        width: 368,
-                        height: 210,
-                      ),
-                      const Gap(10),
-                      Padding(
-                        padding: const EdgeInsets.only(right: 34),
-                        child: Text(
-                          "Made in Melanin! Black History Month",
-                          style: GoogleFonts.poppins(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 16,
-                            color: isDark ? Colors.white : Colors.black,
-                          ),
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(8),
+                        child: Image.asset(
+                          AssetsConstants.blackday,
+                          width: double.infinity,
+                          height: cardImageHeight,
+                          fit: BoxFit.cover,
                         ),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.only(right: 283),
-                        child: Text(
-                          "Social.....",
-                          style: GoogleFonts.poppins(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 16,
-                            color: isDark ? Colors.white : Colors.black,
-                          ),
+                      const Gap(10),
+                      Text(
+                        "Made in Melanin! Black History Month Social.....",
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: GoogleFonts.poppins(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 16,
+                          color: isDark ? Colors.white : Colors.black,
                         ),
                       ),
                       ListTile(
+                        contentPadding: EdgeInsets.zero,
                         leading: ImageIcon(
                           const AssetImage(AssetsConstants.icon_calendar),
                           size: 18,
@@ -156,6 +159,7 @@ class _GroupProfileAdminState extends State<GroupProfileAdmin> {
                         ),
                       ),
                       ListTile(
+                        contentPadding: EdgeInsets.zero,
                         leading: ImageIcon(
                           const AssetImage(AssetsConstants.icon_location),
                           size: 18,
@@ -163,6 +167,7 @@ class _GroupProfileAdminState extends State<GroupProfileAdmin> {
                         ),
                         title: Text(
                           "1901 Thornridge Cir. Shiloh, Hawaii 81063",
+                          overflow: TextOverflow.ellipsis,
                           style: GoogleFonts.poppins(
                             fontWeight: FontWeight.w300,
                             fontSize: 14,
@@ -171,7 +176,7 @@ class _GroupProfileAdminState extends State<GroupProfileAdmin> {
                         ),
                       ),
                       SizedBox(
-                        width: 368,
+                        width: double.infinity,
                         height: 48,
                         child: ElevatedButton(
                           onPressed: () {},
@@ -200,99 +205,98 @@ class _GroupProfileAdminState extends State<GroupProfileAdmin> {
             const Gap(24),
 
             // ---- Card 2 ----
-            Container(
-              width: 392,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(12),
-                color: isDark ? Colors.black : Colors.white,
-                border: Border.all(
-                  color: isDark ? Colors.white12 : AppColors.borderColor,
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: hPad),
+              child: Container(
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12),
+                  color: isDark ? Colors.black : Colors.white,
+                  border: Border.all(
+                    color: isDark ? Colors.white12 : AppColors.borderColor,
+                  ),
                 ),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Column(
-                  children: [
-                    Image.asset(
-                      AssetsConstants.blackday,
-                      width: 368,
-                      height: 210,
-                    ),
-                    const Gap(10),
-                    Padding(
-                      padding: const EdgeInsets.only(right: 34),
-                      child: Text(
-                        "Made in Melanin! Black History Month",
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(8),
+                        child: Image.asset(
+                          AssetsConstants.blackday,
+                          width: double.infinity,
+                          height: cardImageHeight,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                      const Gap(10),
+                      Text(
+                        "Made in Melanin! Black History Month Social.....",
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
                         style: GoogleFonts.poppins(
                           fontWeight: FontWeight.w600,
                           fontSize: 16,
                           color: isDark ? Colors.white : Colors.black,
                         ),
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(right: 283),
-                      child: Text(
-                        "Social.....",
-                        style: GoogleFonts.poppins(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 16,
+                      ListTile(
+                        contentPadding: EdgeInsets.zero,
+                        leading: ImageIcon(
+                          const AssetImage(AssetsConstants.icon_calendar),
+                          size: 18,
                           color: isDark ? Colors.white : Colors.black,
                         ),
-                      ),
-                    ),
-                    ListTile(
-                      leading: ImageIcon(
-                        const AssetImage(AssetsConstants.icon_calendar),
-                        size: 18,
-                        color: isDark ? Colors.white : Colors.black,
-                      ),
-                      title: Text(
-                        "28 October 2025 6:00pm GMT",
-                        style: GoogleFonts.poppins(
-                          fontWeight: FontWeight.w300,
-                          fontSize: 14,
-                          color: isDark ? Colors.white : Colors.black,
-                        ),
-                      ),
-                    ),
-                    ListTile(
-                      leading: ImageIcon(
-                        const AssetImage(AssetsConstants.icon_location),
-                        size: 18,
-                        color: isDark ? Colors.white : Colors.black,
-                      ),
-                      title: Text(
-                        "1901 Thornridge Cir. Shiloh, Hawaii 81063",
-                        style: GoogleFonts.poppins(
-                          fontWeight: FontWeight.w300,
-                          fontSize: 14,
-                          color: isDark ? Colors.white : Colors.black,
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      width: 368,
-                      height: 48,
-                      child: ElevatedButton(
-                        onPressed: () {},
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: AppColors.primaryColor,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                        ),
-                        child: Text(
-                          "Add to my calendar",
+                        title: Text(
+                          "28 October 2025 6:00pm GMT",
                           style: GoogleFonts.poppins(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 16,
-                            color: Colors.white,
+                            fontWeight: FontWeight.w300,
+                            fontSize: 14,
+                            color: isDark ? Colors.white : Colors.black,
                           ),
                         ),
                       ),
-                    ),
-                  ],
+                      ListTile(
+                        contentPadding: EdgeInsets.zero,
+                        leading: ImageIcon(
+                          const AssetImage(AssetsConstants.icon_location),
+                          size: 18,
+                          color: isDark ? Colors.white : Colors.black,
+                        ),
+                        title: Text(
+                          "1901 Thornridge Cir. Shiloh, Hawaii 81063",
+                          overflow: TextOverflow.ellipsis,
+                          style: GoogleFonts.poppins(
+                            fontWeight: FontWeight.w300,
+                            fontSize: 14,
+                            color: isDark ? Colors.white : Colors.black,
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        width: double.infinity,
+                        height: 48,
+                        child: ElevatedButton(
+                          onPressed: () {},
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColors.primaryColor,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
+                          child: Text(
+                            "Add to my calendar",
+                            style: GoogleFonts.poppins(
+                              fontWeight: FontWeight.w600,
+                              fontSize: 16,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),

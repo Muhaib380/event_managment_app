@@ -61,7 +61,7 @@ class _UplaodEventAdminState extends State<UplaodEventAdmin>
     super.dispose();
   }
 
-  // ✅ UPDATED LOGIC: Ab ye Cloudinary par upload karega
+  // ✅ Same Cloudinary Logic
   Future<void> _pickImage() async {
     final XFile? pickedFile = await _picker.pickImage(
       source: ImageSource.gallery,
@@ -75,14 +75,13 @@ class _UplaodEventAdminState extends State<UplaodEventAdmin>
       });
 
       try {
-        // Cloudinary se URL fetch karein
         String? url = await _cloudinaryService.uploadImage(
           File(pickedFile.path),
         );
 
         if (url != null) {
           setState(() {
-            ImageUrl = url; // Yahan URL save ho gaya
+            ImageUrl = url;
             _selectedImage = File(pickedFile.path);
             _isUploading = false;
             _uploadDone = true;
@@ -116,7 +115,10 @@ class _UplaodEventAdminState extends State<UplaodEventAdmin>
       appBar: AppBar(
         backgroundColor: appBarBg,
         iconTheme: IconThemeData(color: textColor),
-        leading: const Icon(Icons.arrow_back),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => Navigator.pop(context),
+        ),
         title: Text(
           "Vote",
           style: GoogleFonts.poppins(
@@ -127,192 +129,188 @@ class _UplaodEventAdminState extends State<UplaodEventAdmin>
         ),
       ),
       body: SingleChildScrollView(
+        // ✅ Added global symmetric padding for responsiveness
+        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 20.0),
         child: Column(
+          // ✅ CrossAxisAlignment.start se har screen par naturally left align hoga
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Gap(31),
-            // UI Code same rakha hai
-            Padding(
-              padding: const EdgeInsets.only(right: 320),
-              child: Text(
-                "Question",
-                style: GoogleFonts.poppins(
-                  fontWeight: FontWeight.w500,
-                  fontSize: 14,
-                  color: textColor,
+            Text(
+              "Question",
+              style: GoogleFonts.poppins(
+                fontWeight: FontWeight.w500,
+                fontSize: 14,
+                color: textColor,
+              ),
+            ),
+            const Gap(8),
+            TextField(
+              controller: questionController,
+              style: TextStyle(color: textColor),
+              decoration: InputDecoration(
+                hintText: "Made in Melanin! Black History Month Social,",
+                hintStyle: TextStyle(color: hintColor),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(11),
+                  borderSide: BorderSide(color: borderColor),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(11),
+                  borderSide: BorderSide(color: borderColor, width: 1.0),
                 ),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: TextField(
-                controller: questionController,
-                style: TextStyle(color: textColor),
-                decoration: InputDecoration(
-                  hintText: "Made in Melanin! Black History Month Social,",
-                  hintStyle: TextStyle(color: hintColor),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(11),
-                    borderSide: BorderSide(color: borderColor),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(11),
-                    borderSide: BorderSide(color: borderColor, width: 1.0),
-                  ),
-                ),
-              ),
-            ),
+
             const Gap(24),
-            Padding(
-              padding: const EdgeInsets.only(right: 320),
-              child: Text(
-                "Options",
-                style: GoogleFonts.poppins(
-                  fontWeight: FontWeight.w500,
-                  fontSize: 14,
-                  color: textColor,
-                ),
+
+            Text(
+              "Options",
+              style: GoogleFonts.poppins(
+                fontWeight: FontWeight.w500,
+                fontSize: 14,
+                color: textColor,
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: TextField(
-                controller: option1Controller,
-                style: TextStyle(color: textColor),
-                decoration: InputDecoration(
-                  hintText: "Option 1",
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(11),
-                    borderSide: BorderSide(color: borderColor),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(11),
-                    borderSide: BorderSide(color: borderColor, width: 1.0),
-                  ),
+            const Gap(8),
+            TextField(
+              controller: option1Controller,
+              style: TextStyle(color: textColor),
+              decoration: InputDecoration(
+                hintText: "Option 1",
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(11),
+                  borderSide: BorderSide(color: borderColor),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(11),
+                  borderSide: BorderSide(color: borderColor, width: 1.0),
                 ),
               ),
             ),
             const Gap(18),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: TextField(
-                controller: option2Controller,
-                style: TextStyle(color: textColor),
-                decoration: InputDecoration(
-                  hintText: "Option 2",
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(11),
-                    borderSide: BorderSide(color: borderColor),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(11),
-                    borderSide: BorderSide(color: borderColor, width: 1.0),
-                  ),
+            TextField(
+              controller: option2Controller,
+              style: TextStyle(color: textColor),
+              decoration: InputDecoration(
+                hintText: "Option 2",
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(11),
+                  borderSide: BorderSide(color: borderColor),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(11),
+                  borderSide: BorderSide(color: borderColor, width: 1.0),
                 ),
               ),
             ),
+
             const Gap(24),
-            Padding(
-              padding: const EdgeInsets.only(right: 275),
-              child: Text(
-                "Upload Image",
-                style: GoogleFonts.poppins(
-                  fontWeight: FontWeight.w500,
-                  fontSize: 14,
-                  color: textColor,
-                ),
+
+            Text(
+              "Upload Image",
+              style: GoogleFonts.poppins(
+                fontWeight: FontWeight.w500,
+                fontSize: 14,
+                color: textColor,
               ),
             ),
-            const Gap(6),
+            const Gap(8),
             GestureDetector(
               onTap: _pickImage,
-              child: Padding(
-                padding: const EdgeInsets.only(right: 229),
-                child: AnimatedContainer(
-                  duration: const Duration(milliseconds: 300),
-                  height: _selectedImage != null ? 160 : 127,
-                  width: 154,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    border: Border.all(
-                      color: _uploadDone ? Colors.green : borderColor,
-                    ),
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 300),
+                height: _selectedImage != null ? 160 : 127,
+                width: 154,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(
+                    color: _uploadDone ? Colors.green : borderColor,
                   ),
-                  child: _isUploading
-                      ? const Center(child: CircularProgressIndicator())
-                      : (_selectedImage != null
-                            ? Image.file(_selectedImage!, fit: BoxFit.cover)
-                            : Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Icon(
-                                    Icons.file_upload_outlined,
+                ),
+                child: _isUploading
+                    ? const Center(child: CircularProgressIndicator())
+                    : (_selectedImage != null
+                          ? ClipRRect(
+                              borderRadius: BorderRadius.circular(10),
+                              child: Image.file(
+                                _selectedImage!,
+                                fit: BoxFit.cover,
+                              ),
+                            )
+                          : Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  Icons.file_upload_outlined,
+                                  color: textColor,
+                                ),
+                                const Gap(4),
+                                Text(
+                                  "Upload",
+                                  style: TextStyle(
                                     color: textColor,
+                                    fontSize: 12,
                                   ),
-                                  const Gap(4),
-                                  Text(
-                                    "Upload",
-                                    style: TextStyle(
-                                      color: textColor,
-                                      fontSize: 12,
-                                    ),
-                                  ),
-                                ],
-                              )),
-                ),
+                                ),
+                              ],
+                            )),
               ),
             ),
-            const Gap(24),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8.0),
-              child: SizedBox(
-                height: 56,
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: () async {
-                    if (ImageUrl == null) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text("Please upload an image")),
-                      );
-                      return;
-                    }
-                    setState(() => isLoading = true);
-                    try {
-                      await VoteServices().createQuestion(
-                        VoteModel(
-                          question: questionController.text,
-                          option: [
-                            option1Controller.text,
-                            option2Controller.text,
-                          ],
-                          image: ImageUrl!,
-                        ),
-                      );
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text("Question created successfully"),
-                        ),
-                      );
-                      Navigator.pop(context);
-                    } catch (e) {
-                      ScaffoldMessenger.of(
-                        context,
-                      ).showSnackBar(SnackBar(content: Text(e.toString())));
-                    } finally {
-                      setState(() => isLoading = false);
-                    }
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.primaryColor,
+
+            const Gap(32),
+
+            SizedBox(
+              height: 56,
+              width: double.infinity, // ✅ Button har screen par full width lega
+              child: ElevatedButton(
+                onPressed: () async {
+                  if (ImageUrl == null) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text("Please upload an image")),
+                    );
+                    return;
+                  }
+                  setState(() => isLoading = true);
+                  try {
+                    await VoteServices().createQuestion(
+                      VoteModel(
+                        question: questionController.text,
+                        option: [
+                          option1Controller.text,
+                          option2Controller.text,
+                        ],
+                        image: ImageUrl!,
+                      ),
+                    );
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text("Question created successfully"),
+                      ),
+                    );
+                    Navigator.pop(context);
+                  } catch (e) {
+                    ScaffoldMessenger.of(
+                      context,
+                    ).showSnackBar(SnackBar(content: Text(e.toString())));
+                  } finally {
+                    setState(() => isLoading = false);
+                  }
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.primaryColor,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(11),
                   ),
-                  child: isLoading
-                      ? const CircularProgressIndicator(color: Colors.white)
-                      : const Text(
-                          "Vote",
-                          style: TextStyle(color: Colors.white),
-                        ),
                 ),
+                child: isLoading
+                    ? const CircularProgressIndicator(color: Colors.white)
+                    : const Text(
+                        "Vote",
+                        style: TextStyle(color: Colors.white, fontSize: 16),
+                      ),
               ),
             ),
+            const Gap(20), // Bottom space
           ],
         ),
       ),

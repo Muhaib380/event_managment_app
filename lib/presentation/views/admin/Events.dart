@@ -1,4 +1,5 @@
 import 'package:event_managment_app/configurations/app_colors.dart';
+import 'package:event_managment_app/infrastructure/models/event.dart';
 import 'package:event_managment_app/presentation/constants/assets_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -6,7 +7,12 @@ import 'package:gap/gap.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class EventsPageAdmin extends StatefulWidget {
-  const EventsPageAdmin({super.key});
+  final EventModel event; // ✅ EventModel parameter add kiya
+
+  const EventsPageAdmin({
+    super.key,
+    required this.event, // ✅ required parameter
+  });
 
   @override
   State<EventsPageAdmin> createState() => _EventsPageAdminState();
@@ -18,6 +24,11 @@ class _EventsPageAdminState extends State<EventsPageAdmin> {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    // Responsive helpers
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+    final hPad = screenWidth * 0.05; // 5% horizontal padding
 
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
@@ -47,29 +58,44 @@ class _EventsPageAdminState extends State<EventsPageAdmin> {
 
       body: SingleChildScrollView(
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // ── Hero Image ── ✅ Dynamic image from event
             SizedBox(
-              height: 404,
+              height: screenHeight * 0.42,
               width: double.infinity,
-              child: Image.asset(AssetsConstants.evets, fit: BoxFit.cover),
+              child:
+                  widget.event.image != null && widget.event.image!.isNotEmpty
+                  ? Image.network(
+                      widget.event.image!,
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) =>
+                          Image.asset(AssetsConstants.evets, fit: BoxFit.cover),
+                    )
+                  : Image.asset(AssetsConstants.evets, fit: BoxFit.cover),
             ),
 
             const Gap(24),
 
-            Center(
-              child: Text(
-                "Made in Melanin! Black History Month Social.....",
-                textAlign: TextAlign.center,
-                style: GoogleFonts.poppins(
-                  fontWeight: FontWeight.w600,
-                  fontSize: 15,
-                  color: isDark ? Colors.white : Colors.black,
+            // ── Event Title ── ✅ Dynamic title from event
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: hPad),
+              child: Center(
+                child: Text(
+                  widget.event.title ?? 'No Title',
+                  textAlign: TextAlign.center,
+                  style: GoogleFonts.poppins(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 15,
+                    color: isDark ? Colors.white : Colors.black,
+                  ),
                 ),
               ),
             ),
 
             const Gap(9),
 
+            // ── Date ListTile ── ✅ Dynamic date from event
             ListTile(
               leading: ImageIcon(
                 const AssetImage(AssetsConstants.icon_calendar),
@@ -77,7 +103,7 @@ class _EventsPageAdminState extends State<EventsPageAdmin> {
                 color: isDark ? Colors.white : Colors.black,
               ),
               title: Text(
-                "28 October 2025 6:00pm GMT",
+                widget.event.dateTime?.toString() ?? 'Date not available',
                 style: GoogleFonts.poppins(
                   fontWeight: FontWeight.w400,
                   fontSize: 14,
@@ -86,6 +112,7 @@ class _EventsPageAdminState extends State<EventsPageAdmin> {
               ),
             ),
 
+            // ── Location ListTile ── ✅ Dynamic location from event
             ListTile(
               leading: ImageIcon(
                 const AssetImage(AssetsConstants.icon_location),
@@ -93,7 +120,7 @@ class _EventsPageAdminState extends State<EventsPageAdmin> {
                 color: isDark ? Colors.white : Colors.black,
               ),
               title: Text(
-                "1901 Thornridge Cir. Shiloh, Hawaii 81063",
+                widget.event.location ?? 'Location not available',
                 style: GoogleFonts.poppins(
                   fontWeight: FontWeight.w400,
                   fontSize: 14,
@@ -102,8 +129,9 @@ class _EventsPageAdminState extends State<EventsPageAdmin> {
               ),
             ),
 
+            // ── Event Detail Label ──
             Padding(
-              padding: const EdgeInsets.only(right: 275),
+              padding: EdgeInsets.only(left: hPad),
               child: Text(
                 "Event Detail",
                 style: GoogleFonts.poppins(
@@ -116,10 +144,11 @@ class _EventsPageAdminState extends State<EventsPageAdmin> {
 
             const Gap(14),
 
+            // ── Detail Container ── ✅ Dynamic description from event
             Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: EdgeInsets.symmetric(horizontal: hPad),
               child: Container(
-                width: 390,
+                width: double.infinity,
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
                   color: isDark ? Colors.black : AppColors.eventContainer,
@@ -129,7 +158,7 @@ class _EventsPageAdminState extends State<EventsPageAdmin> {
                   ),
                 ),
                 child: Text(
-                  "Lorem ipsum dolor sit amet consectetur. Sed volutpat euismod enim accumsan quam posuere. Tortor pretium lorem dui metus amet in sed. Sodales volutpat maecenas et quisque nibh ultrices in nulla.",
+                  widget.event.eventdetails ?? 'No description available.',
                   style: GoogleFonts.poppins(
                     fontSize: 13,
                     fontWeight: FontWeight.w400,
@@ -141,23 +170,27 @@ class _EventsPageAdminState extends State<EventsPageAdmin> {
 
             const Gap(30),
 
-            SizedBox(
-              width: 400,
-              height: 56,
-              child: ElevatedButton(
-                onPressed: () {},
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.primaryColor,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
+            // ── Add to Calendar Button ──
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: hPad),
+              child: SizedBox(
+                width: double.infinity,
+                height: 56,
+                child: ElevatedButton(
+                  onPressed: () {},
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.primaryColor,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
                   ),
-                ),
-                child: Text(
-                  "Add to my calendar",
-                  style: GoogleFonts.poppins(
-                    fontWeight: FontWeight.w600,
-                    fontSize: 16,
-                    color: Colors.white,
+                  child: Text(
+                    "Add to my calendar",
+                    style: GoogleFonts.poppins(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 16,
+                      color: Colors.white,
+                    ),
                   ),
                 ),
               ),
