@@ -7,12 +7,9 @@ import 'package:gap/gap.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class EventsPageAdmin extends StatefulWidget {
-  final EventModel event; // ✅ EventModel parameter add kiya
+  final EventModel event; // ✅ Event receive karta hai
 
-  const EventsPageAdmin({
-    super.key,
-    required this.event, // ✅ required parameter
-  });
+  const EventsPageAdmin({super.key, required this.event});
 
   @override
   State<EventsPageAdmin> createState() => _EventsPageAdminState();
@@ -24,16 +21,15 @@ class _EventsPageAdminState extends State<EventsPageAdmin> {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-
-    // Responsive helpers
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
-    final hPad = screenWidth * 0.05; // 5% horizontal padding
+    final hPad = screenWidth * 0.05;
 
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       extendBodyBehindAppBar: true,
 
+      // ── AppBar ──
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -60,7 +56,7 @@ class _EventsPageAdminState extends State<EventsPageAdmin> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // ── Hero Image ── ✅ Dynamic image from event
+            // ── Hero Image ── ✅ Event ki real image
             SizedBox(
               height: screenHeight * 0.42,
               width: double.infinity,
@@ -69,15 +65,19 @@ class _EventsPageAdminState extends State<EventsPageAdmin> {
                   ? Image.network(
                       widget.event.image!,
                       fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) =>
-                          Image.asset(AssetsConstants.evets, fit: BoxFit.cover),
+                      errorBuilder: (context, error, stackTrace) {
+                        return Image.asset(
+                          AssetsConstants.evets,
+                          fit: BoxFit.cover,
+                        );
+                      },
                     )
                   : Image.asset(AssetsConstants.evets, fit: BoxFit.cover),
             ),
 
             const Gap(24),
 
-            // ── Event Title ── ✅ Dynamic title from event
+            // ── Event Title ── ✅ Event ka real title
             Padding(
               padding: EdgeInsets.symmetric(horizontal: hPad),
               child: Center(
@@ -95,7 +95,7 @@ class _EventsPageAdminState extends State<EventsPageAdmin> {
 
             const Gap(9),
 
-            // ── Date ListTile ── ✅ Dynamic date from event
+            // ── Date ── ✅ Event ki real date
             ListTile(
               leading: ImageIcon(
                 const AssetImage(AssetsConstants.icon_calendar),
@@ -112,7 +112,7 @@ class _EventsPageAdminState extends State<EventsPageAdmin> {
               ),
             ),
 
-            // ── Location ListTile ── ✅ Dynamic location from event
+            // ── Location ── ✅ Event ki real location
             ListTile(
               leading: ImageIcon(
                 const AssetImage(AssetsConstants.icon_location),
@@ -144,7 +144,7 @@ class _EventsPageAdminState extends State<EventsPageAdmin> {
 
             const Gap(14),
 
-            // ── Detail Container ── ✅ Dynamic description from event
+            // ── Detail Container ── ✅ Event ki real description
             Padding(
               padding: EdgeInsets.symmetric(horizontal: hPad),
               child: Container(
