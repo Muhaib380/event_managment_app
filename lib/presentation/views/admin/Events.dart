@@ -7,7 +7,7 @@ import 'package:gap/gap.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class EventsPageAdmin extends StatefulWidget {
-  final EventModel event; // ✅ Event receive karta hai
+  final EventModel event;
 
   const EventsPageAdmin({super.key, required this.event});
 
@@ -21,6 +21,8 @@ class _EventsPageAdminState extends State<EventsPageAdmin> {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final event = widget.event;
+
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
     final hPad = screenWidth * 0.05;
@@ -29,7 +31,6 @@ class _EventsPageAdminState extends State<EventsPageAdmin> {
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       extendBodyBehindAppBar: true,
 
-      // ── AppBar ──
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -56,14 +57,13 @@ class _EventsPageAdminState extends State<EventsPageAdmin> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // ── Hero Image ── ✅ Event ki real image
+            // ── Hero Image ──
             SizedBox(
               height: screenHeight * 0.42,
               width: double.infinity,
-              child:
-                  widget.event.image != null && widget.event.image!.isNotEmpty
+              child: event.image != null && event.image!.isNotEmpty
                   ? Image.network(
-                      widget.event.image!,
+                      event.image!,
                       fit: BoxFit.cover,
                       errorBuilder: (context, error, stackTrace) {
                         return Image.asset(
@@ -77,12 +77,12 @@ class _EventsPageAdminState extends State<EventsPageAdmin> {
 
             const Gap(24),
 
-            // ── Event Title ── ✅ Event ka real title
+            // ── Event Title ──
             Padding(
               padding: EdgeInsets.symmetric(horizontal: hPad),
               child: Center(
                 child: Text(
-                  widget.event.title ?? 'No Title',
+                  event.title ?? 'No Title',
                   textAlign: TextAlign.center,
                   style: GoogleFonts.poppins(
                     fontWeight: FontWeight.w600,
@@ -95,7 +95,7 @@ class _EventsPageAdminState extends State<EventsPageAdmin> {
 
             const Gap(9),
 
-            // ── Date ── ✅ Event ki real date
+            // ── Date ListTile ──
             ListTile(
               leading: ImageIcon(
                 const AssetImage(AssetsConstants.icon_calendar),
@@ -103,7 +103,7 @@ class _EventsPageAdminState extends State<EventsPageAdmin> {
                 color: isDark ? Colors.white : Colors.black,
               ),
               title: Text(
-                widget.event.dateTime?.toString() ?? 'Date not available',
+                event.dateTime != null ? event.dateTime.toString() : 'No Date',
                 style: GoogleFonts.poppins(
                   fontWeight: FontWeight.w400,
                   fontSize: 14,
@@ -112,7 +112,7 @@ class _EventsPageAdminState extends State<EventsPageAdmin> {
               ),
             ),
 
-            // ── Location ── ✅ Event ki real location
+            // ── Location ListTile ──
             ListTile(
               leading: ImageIcon(
                 const AssetImage(AssetsConstants.icon_location),
@@ -120,7 +120,7 @@ class _EventsPageAdminState extends State<EventsPageAdmin> {
                 color: isDark ? Colors.white : Colors.black,
               ),
               title: Text(
-                widget.event.location ?? 'Location not available',
+                event.location ?? 'No Location',
                 style: GoogleFonts.poppins(
                   fontWeight: FontWeight.w400,
                   fontSize: 14,
@@ -144,7 +144,7 @@ class _EventsPageAdminState extends State<EventsPageAdmin> {
 
             const Gap(14),
 
-            // ── Detail Container ── ✅ Event ki real description
+            // ── Detail Container ──
             Padding(
               padding: EdgeInsets.symmetric(horizontal: hPad),
               child: Container(
@@ -158,7 +158,8 @@ class _EventsPageAdminState extends State<EventsPageAdmin> {
                   ),
                 ),
                 child: Text(
-                  widget.event.eventdetails ?? 'No description available.',
+                  event.eventdetails ??
+                      'No Description Available', // ✅ FIXED HERE
                   style: GoogleFonts.poppins(
                     fontSize: 13,
                     fontWeight: FontWeight.w400,

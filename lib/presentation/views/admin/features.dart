@@ -3,6 +3,7 @@ import 'package:event_managment_app/infrastructure/models/event.dart';
 import 'package:event_managment_app/infrastructure/services/event.dart';
 import 'package:event_managment_app/presentation/constants/assets_constants.dart';
 import 'package:event_managment_app/presentation/views/admin/Events.dart';
+import 'package:event_managment_app/presentation/views/event/evets_page.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -25,6 +26,8 @@ class _FeaturesAdminState extends State<FeaturesAdmin> {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    // ✅ Responsive helpers
     final size = MediaQuery.of(context).size;
     final sw = size.width;
     final sh = size.height;
@@ -35,9 +38,8 @@ class _FeaturesAdminState extends State<FeaturesAdmin> {
         body: SingleChildScrollView(
           child: Column(
             children: [
-
-              // ── Header ──
               Gap(sh * 0.035),
+
               Row(
                 children: [
                   Padding(
@@ -62,17 +64,15 @@ class _FeaturesAdminState extends State<FeaturesAdmin> {
                   ),
                 ],
               ),
+
               Gap(sh * 0.025),
 
-              // ── Event List ──
               StreamBuilder<List<EventModel>>(
                 stream: EventServices().getEvent(),
                 builder: (context, snapshot) {
-
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return const Center(child: CircularProgressIndicator());
                   }
-
                   if (!snapshot.hasData || snapshot.data!.isEmpty) {
                     return Center(
                       child: Text(
@@ -96,8 +96,6 @@ class _FeaturesAdminState extends State<FeaturesAdmin> {
 
                       return Column(
                         children: [
-
-                          // ── Event Card ──
                           Card(
                             color: isDark ? Colors.black : Colors.white,
                             child: Container(
@@ -114,27 +112,34 @@ class _FeaturesAdminState extends State<FeaturesAdmin> {
                                 padding: EdgeInsets.all(sw * 0.02),
                                 child: Column(
                                   children: [
-
-                                    // ── Image + Favorite Icon ──
                                     Stack(
                                       children: [
                                         ClipRRect(
-                                          borderRadius: BorderRadius.circular(10),
-                                          child: event.image != null &&
+                                          borderRadius: BorderRadius.circular(
+                                            10,
+                                          ),
+                                          child:
+                                              event.image != null &&
                                                   event.image!.isNotEmpty
                                               ? Image.network(
                                                   event.image!,
                                                   width: sw * 0.9,
                                                   height: sh * 0.25,
                                                   fit: BoxFit.cover,
-                                                  errorBuilder: (context, error, stackTrace) {
-                                                    return Image.asset(
-                                                      AssetsConstants.blackday,
-                                                      width: sw * 0.9,
-                                                      height: sh * 0.25,
-                                                      fit: BoxFit.cover,
-                                                    );
-                                                  },
+                                                  errorBuilder:
+                                                      (
+                                                        context,
+                                                        error,
+                                                        stackTrace,
+                                                      ) {
+                                                        return Image.asset(
+                                                          AssetsConstants
+                                                              .blackday,
+                                                          width: sw * 0.9,
+                                                          height: sh * 0.25,
+                                                          fit: BoxFit.cover,
+                                                        );
+                                                      },
                                                 )
                                               : Image.asset(
                                                   AssetsConstants.blackday,
@@ -148,7 +153,10 @@ class _FeaturesAdminState extends State<FeaturesAdmin> {
                                           right: sw * 0.025,
                                           child: GestureDetector(
                                             onTap: () {
-                                              widget.onFavoriteChanged(event, !isFav);
+                                              widget.onFavoriteChanged(
+                                                event,
+                                                !isFav,
+                                              );
                                             },
                                             child: Icon(
                                               isFav
@@ -157,18 +165,15 @@ class _FeaturesAdminState extends State<FeaturesAdmin> {
                                               color: isFav
                                                   ? Colors.red
                                                   : (isDark
-                                                      ? Colors.white70
-                                                      : Colors.grey),
+                                                        ? Colors.white70
+                                                        : Colors.grey),
                                               size: sw * 0.055,
                                             ),
                                           ),
                                         ),
                                       ],
                                     ),
-
                                     Gap(sh * 0.012),
-
-                                    // ── Title ──
                                     Padding(
                                       padding: EdgeInsets.symmetric(
                                         horizontal: sw * 0.02,
@@ -187,62 +192,74 @@ class _FeaturesAdminState extends State<FeaturesAdmin> {
                                         ),
                                       ),
                                     ),
-
                                     Gap(sh * 0.012),
-
-                                    // ── Date ──
                                     ListTile(
                                       leading: ImageIcon(
-                                        const AssetImage(AssetsConstants.icon_calendar),
+                                        const AssetImage(
+                                          AssetsConstants.icon_calendar,
+                                        ),
                                         size: sw * 0.045,
-                                        color: isDark ? Colors.white : Colors.black,
+                                        color: isDark
+                                            ? Colors.white
+                                            : Colors.black,
                                       ),
                                       title: Text(
                                         event.dateTime.toString(),
                                         style: GoogleFonts.poppins(
                                           fontWeight: FontWeight.w300,
                                           fontSize: sw * 0.032,
-                                          color: isDark ? Colors.white : Colors.black,
+                                          color: isDark
+                                              ? Colors.white
+                                              : Colors.black,
                                         ),
                                       ),
                                     ),
-
-                                    // ── Location ──
                                     ListTile(
                                       leading: ImageIcon(
-                                        const AssetImage(AssetsConstants.icon_location),
+                                        const AssetImage(
+                                          AssetsConstants.icon_location,
+                                        ),
                                         size: sw * 0.045,
-                                        color: isDark ? Colors.white : Colors.black,
+                                        color: isDark
+                                            ? Colors.white
+                                            : Colors.black,
                                       ),
                                       title: Text(
                                         event.location ?? "",
                                         style: GoogleFonts.poppins(
                                           fontWeight: FontWeight.w300,
                                           fontSize: sw * 0.032,
-                                          color: isDark ? Colors.white : Colors.black,
+                                          color: isDark
+                                              ? Colors.white
+                                              : Colors.black,
                                         ),
                                       ),
                                     ),
-
-                                    // ── Add to Calendar Button ──
+                                    // ── Add to Calendar Button ──────────
                                     SizedBox(
                                       width: double.infinity,
                                       height: sh * 0.06,
                                       child: ElevatedButton(
                                         onPressed: () {
+                                          // ✅ Ab specific event pass ho raha hai
                                           Navigator.push(
                                             context,
                                             MaterialPageRoute(
-                                              builder: (context) => EventsPageAdmin(
-                                                event: event,
-                                              ),
+                                              builder: (context) =>
+                                                  EventsPageAdmin(
+                                                    event:
+                                                        event, // ✅ EVENT PASS
+                                                  ),
                                             ),
                                           );
                                         },
                                         style: ElevatedButton.styleFrom(
-                                          backgroundColor: AppColors.primaryColor,
+                                          backgroundColor:
+                                              AppColors.primaryColor,
                                           shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(10),
+                                            borderRadius: BorderRadius.circular(
+                                              10,
+                                            ),
                                           ),
                                         ),
                                         child: Text(
@@ -255,22 +272,18 @@ class _FeaturesAdminState extends State<FeaturesAdmin> {
                                         ),
                                       ),
                                     ),
-
                                   ],
                                 ),
                               ),
                             ),
                           ),
-
                           Gap(sh * 0.03),
-
                         ],
                       );
                     },
                   );
                 },
               ),
-
             ],
           ),
         ),
